@@ -1,0 +1,163 @@
+<div id="demostraciones" class="outter-wrapper ultra-wide-open">
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+         <div>
+
+            <div class="logo-top">
+                  <img src="/images/icon.png"
+                     srcset="/images/icon@2x.png 2x,
+                              /images/icon@3x.png 3x"
+                     class="icon">
+            </div>
+
+               <nav v-if="me.rolDemostraciones != 'profesional'">
+
+                  <div class="active-btt">
+                     <div class="decor"></div>
+                  </div>
+
+                  <ul>
+                     <li class="home-btt">
+                        <a href="/bienvenido"><i class="icon-speedometer"></i></a>
+                        <div class="decor"></div>
+                     </li> 
+                     <li :class=" ( stream == 'up' ) ? 'active' : '' ">
+                        <a data-filter="up" @click="navFilterClick" href="/demostraciones/up">Up</a>
+                        <div class="decor"></div>
+                     </li>
+                     <li :class=" ( stream == 'mid' ) ? 'active' : '' ">
+                        <a data-filter="mid" @click="navFilterClick" href="/demostraciones/mid">Mid</a>
+                        <div class="decor"></div>
+                     </li>
+                     <li :class=" ( stream == 'down' ) ? 'active' : '' ">
+                        <a data-filter="down" @click="navFilterClick" href="/demostraciones/down">Down</a>
+                        <div class="decor"></div>
+                     </li>
+                  </ul>
+
+               </nav>
+
+            </div>
+
+            <div class="logo-icp">
+
+               <img src="/images/logo-icp.svg" />
+
+            </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div class="admin-content">
+
+         <a v-if="me.isSuperAdmin" class="back" href="/bienvenido"><i class="icon-arrow"></i> Vista General</a>
+
+         <h2 v-if="me.isSuperAdmin">Demostraciones de área de Implementación <span class="uppercase">{{ stream }}</span></h2>
+
+         <h2 v-else>Mis Demostraciones</h2>
+
+         <div v-if="me.isSuperAdmin" class="filter-nav">
+
+            <div @click="filterClick" class="active">Todas las Demostraciones <span class="uppercase">{{ virtualStream }}</span></div>
+
+            <div data-filter="completadas" @click="filterClick">Completadas</div>
+
+            <div data-filter="proceso" @click="filterClick">En Proceso</div>
+
+            <div data-filter="riesgo" @click="filterClick">En Riesgo</div>
+
+            <div class="after"></div>
+
+         </div>   
+
+         <div v-if="me.isSuperAdmin" class="demo-list">
+
+            <div v-for="(item, index) in demos">
+
+               <div :class="!item.avanceRealTotal && 'cero'" class="avance-graph">
+
+                  <h2>{{item.nombre}}</h2>
+
+                  <div class="graph-wrapper">
+
+                     <div class="ct-chart ct-perfect-fourth"></div>
+
+                     <div class="avance-label">
+
+                        <h3><span class="count">{{ Math.floor( item.avanceRealTotal || 0 ) }}</span>%</h3>
+                        <p>Completado</p>
+
+                     </div>
+
+                     <div class="percent-labels">
+
+                        <span>0%</span>
+                        <span>100%</span>
+
+                     </div>
+
+                  </div>
+
+                  <div class="avance-footer">
+
+                     <p class="align-center">Cumplimiento: {{ item.cumplimientoTotal }}%</p>
+
+                     <a :href="'/resumen/' + item.id" class="cont">
+
+                        <span>Actividades</span>
+
+                        <i class="icon-arrow"></i>
+
+                     </a>
+
+                  </div>
+
+               </div><!-- /demos-item -->
+
+            </div>
+
+         </div><!-- /demos-list -->
+
+         <div v-else class="actividades-list">
+
+            <div v-for="(item, index) in demos">
+
+                <div class="actividad-item">
+
+                  <div>
+
+                      <h2>{{item.nombre}}</h2>
+
+                  </div><!-- /demos-item -->
+
+                  <div>
+
+                    <a :href="'/resumen/' + item.id" class="btt-wrapper arrow-link">
+
+                        <i class="icon-arrow"></i>
+
+                    </a>
+
+                  </div>
+                
+                </div>
+
+            </div>
+
+         </div>
+
+         <router-view></router-view>
+
+      </div><!-- /bienvenido-wrapper -->
+
+   </div><!-- /end-col-->
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

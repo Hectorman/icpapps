@@ -1,0 +1,397 @@
+<div id="actividades" class="outter-wrapper ultra-wide-open">
+
+  <div id="notas-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+      <h2>Experimento de Actividad - 01</h2>
+
+      <div class="notas-list">
+
+         <transition-group name="fade">
+
+            <div v-for="(item, index) in listaNotas" :key="'nota' + index" class="nota-item">
+
+               <span>Nota {{ index + 1 }}</span>
+
+               <span class="date"><js-timestamp :at="item.createdAt" format="calendar"></js-timestamp></span>
+
+               <div class="nota-content">
+
+                  {{ item.nota }}
+
+               </div>
+
+            </div>
+
+         </transition-group>
+
+      </div>
+
+   </div>
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+        <div>
+          <div class="logo-top">
+              <img src="/images/icon.png"
+                  srcset="/images/icon@2x.png 2x,
+                          /images/icon@3x.png 3x"
+                  class="icon">
+          </div>
+
+          <nav v-if="me.isSuperAdmin">
+
+              <ul>
+                  <li class="home-btt">
+                  <a href="/bienvenido"><i class="icon-speedometer"></i></a>
+                  <div class="decor"></div>
+                  </li> 
+                  <li :class=" ( demo.areaImplementacion.toLowerCase() == 'up' ) ? 'active' : '' ">
+                  <a href="/demostraciones/up">Up</a>
+                  <div class="decor"></div>
+                  </li>
+                  <li :class=" ( demo.areaImplementacion.toLowerCase() == 'mid' ) ? 'active' : '' ">
+                    <a href="/demostraciones/mid">Mid</a>
+                    <div class="decor"></div>
+                  </li>
+                  <li :class=" ( demo.areaImplementacion.toLowerCase() == 'down' ) ? 'active' : '' ">
+                    <a href="/demostraciones/down">Down</a>
+                    <div class="decor"></div>
+                  </li>
+              </ul>
+
+          </nav>
+        </div>
+
+         <div class="logo-icp">
+
+            <img src="/images/logo-icp.svg" />
+
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div class="admin-content">
+
+         <a v-if="me.isSuperAdmin" class="back" :href="'/demostraciones/' + demo.areaImplementacion.toLowerCase()"><i class="icon-arrow"></i> Demostraciones {{ demo.areaImplementacion }}</a>
+
+         <h2>{{ demo.nombre }}</h2>
+
+         <div class="filter-nav">
+
+            <div class="active" @click="navClick">Actividades</div>
+
+            <div @click="navClick">Información General</div>
+
+            <div class="after"></div>
+
+         </div>   
+
+         <div class="actividades-list">
+
+            <div v-for="(item, index) in nombresActividades">
+
+                <div :class="item.orden == 2 && experimentos.length && 'has-exp'" class="actividad-item">
+
+                  <div>
+
+                      <div class="orden">{{ item.orden }}</div>
+
+                      <h2>{{item.nombre}}</h2>
+
+                      <div @click="showExp" class="show-exp" v-if="experimentos.length && item.orden == 2">
+
+                        <i class="icon-expand_more"></i>
+
+                      </div>
+
+                  </div><!-- /demos-item -->
+
+                  <div>
+
+                    <div class="cumpli-box">Sin Datos</div>
+
+                    <div @click="showDetail" class="btt-wrapper">
+
+                        <i class="icon-eye"></i>
+
+                    </div>
+
+                    <a :href="'/actividad/' + item.orden + '/' + demo.id" v-if="!me.isSuperAdmin" class="btt-wrapper arrow-link">
+
+                        <i class="icon-arrow"></i>
+
+                    </a>
+
+                  </div>
+                
+                </div>
+
+                <div class="exp-list" v-if="item.orden == 2">
+
+                    <div v-for="(item, index) in experimentos" class="exp-form existent">
+
+                        <div class="row">
+
+                           <div class="col-12 col-md-4">
+                              <div class="form-group">
+                                 <p>{{item.nombre}}</p>
+                                 <label>Nombre Experimento</label>
+                              </div>
+                           </div>
+
+                           <div class="col-12 col-sm-5 col-md-3">
+                              <div class="form-group">
+                                 <p>{{ dateFromNumberToString( item.fechaInicial ) }}</p>
+                                 <label>Fecha de Inicio</label>
+                              </div>
+                           </div>
+
+                           <div class="col-12 col-sm-5 col-md-3">
+                              <div class="form-group">
+                                 <p>{{ dateFromNumberToString(item.fechaFinal) }}</p>
+                                 <label>Fecha de Vencimiento</label>
+                              </div>
+                           </div>
+
+                           <div class="col-12 col-sm2 col-md-2 buttons">
+                             <div class="btn-wrapper">
+                                <a :class="!item.notas.length && 'disabled'" @click="abrirNotas" href="#" title="Ver notas" ><i class="icon-edit"></i></a>
+                              </div>
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                </div>
+
+            </div>
+
+         </div><!-- /demos-list -->
+
+         <div class="informacion-general">
+
+            <div class="row">
+              <div class="col">
+                <h2><span>1</span> Detalles de Demostración</h2>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Nombre de Lider de Demostración:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.nombreLider }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Nombre de Jefe de Demostración:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.nombreJefe }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Departamento:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.departamento }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Gerencia:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.gerencia }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Correo de Lider de Demostración:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demoLider.emailAddress ? demoLider.emailAddress.toLowerCase() : '' }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Celular de Lider de Demostración:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demoLider.celular }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Área de Implementación:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.areaImplementacion }}
+              </div>
+            </div>
+
+            <br /><br />
+
+            <div class="row">
+              <div class="col">
+                <h2><span>2</span> Modelo de Desarrollo</h2>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Modelo de Desarrollo:
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.modeloDesarrollo }}
+              </div>
+            </div>
+
+            <div v-if="demo.modeloDesarrollo == 'codesarrollo'" class="row">
+              <div class="col-12 col-md-6">
+                  Nombre de Aliado (en Codesarrollo):
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.nombreAliado }}
+              </div>
+            </div>
+
+            <br /><br />
+
+            <div class="row">
+              <div class="col">
+                <h2><span>3</span> Nivel de Madurez a Alcanzar</h2>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 col-md-6">
+                  Nivel de Madurez de la Tecnología a Alcanzar
+              </div>
+              <div class="col-12 col-md-6">
+                {{ demo.modeloMadurez }}
+              </div>
+            </div>
+
+            <br /><br />
+
+            <div class="row">
+              <div class="col">
+                <a v-if="!me.isSuperAdmin" :href="'/demostracion/' + demo.id" class="secondary-btn"><i class="icon-edit"></i> Editar Informacion General</a>
+              </div>
+            </div>
+
+         </div>
+
+      </div><!-- /admin-content -->
+
+      <div class="rightbar integrantes-sidebar">
+
+        <div class="integrantes-list">
+
+          <a title="editar-integrantes" v-if="!me.isSuperAdmin" class="edit-info" :href="'/demostracion/' + demo.id"><i class="icon-edit"></i></a>
+
+          <h2>Avances de esta Demostración</h2>
+
+          <div v-for="(actividad, index) in demo.actividades" v-if="actividad.avances || actividad.notasAvance" class="actividad-avance">
+
+            <!-- <h3>Actividad {{ actividad.orden }}</h3> -->
+
+            <div v-if="actividad.avances" v-for="avance in actividad.avances" class="avance-actividad">
+
+              <div class="avance-header">
+
+                <span>Actividad {{ actividad.orden }}</span>
+
+                <span class="date">{{ prettyDate( avance.createdAt ) }}</span>
+
+              </div>
+
+              <p>{{ avance.avance }}</p>
+
+            </div>
+
+            <div v-if="actividad.notasAvance" class="avance-actividad">
+
+              <p>{{ actividad.notasAvance }}</p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="line"></div>
+
+        <div :class="demo.colorClass">
+
+          <div class="line-graph">
+
+            <h3><span class="count">{{ demo.avanceRealTotal }}</span>%</h3>
+            <p>Completado</p>
+
+            <div class="bar-rail">
+              <div :style="'width:'+ demo.avanceRealTotal +'%;'" class="bar"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="rightbar actividad-detail">
+
+        <div class="inner-wrapper">
+
+          <div>
+
+            <p class="top-title">Observaciones</p>
+
+            <h2 class="nombre-actividad"></h2>
+
+            <div class="observaciones"></div>
+
+          </div>
+
+          <div class="chart-wrapper">
+            <div id="chart"></div>
+          </div>  
+
+          <div class="avance">
+
+            <div class="avance-percent"><span>0</span>%</div>
+
+            <p class="avance-text">de avance de lo planificado</p>
+
+            <div class="bar"><div style="width:0%"></div></div>
+
+            <p><span class="dias-asignados">0</span> días asignados</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+   </div><!-- /end-col-->
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

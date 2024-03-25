@@ -1,0 +1,88 @@
+<div class="outter-wrapper">
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+         <div class="titulo">
+            <img src="/images/ecopetrol-icon.png" />
+            <h1>Demostraciones</h1>
+         </div>
+
+         <div>
+            <img src="/images/logo-ecopetrol.png" />
+         </div>
+
+         <div>
+            <img src="/images/concept.png" />
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div id="account-overview" v-cloak>
+        <div class="container cloak">
+
+          <ajax-form action="confirmProfile" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+             <div class="bg-wrapper">
+                <h1 v-if="populatedUser.profileConfirmed" >Información Personal</h1>
+                <h1 v-else>Confirmación de Información</h1>
+                <div class="row">
+                  <div class="col-12 col-sm-4">Nombre</div>
+                  <div class="col-12 col-sm-8"><input type="text" class="capitalize" :value="me.fullName.toLowerCase()" readonly /></div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-4">Gerencia</div>
+                  <div class="col-12 col-sm-8"><input type="text" :value="populatedUser.registro[0].gerencia" readonly /></div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-4">Departamento</div>
+                  <div class="col-12 col-sm-8"><input type="text" :value="populatedUser.registro[0].departamento" readonly /></div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-4">Email</div>
+                  <div class="col-12 col-sm-8">
+                    <input
+                        :class="[me.emailStatus === 'unconfirmed' || me.emailStatus === 'change-requested' ? 'text-muted' : '']"
+                        :value="me.emailChangeCandidate ? me.emailChangeCandidate.toLowerCase() : me.emailAddress.toLowerCase()"
+                     type="text" readonly />
+                    <span v-if="me.emailStatus === 'unconfirmed' || me.emailStatus === 'change-requested'" class="badge badge-pill badge-warning">Unverified</span>
+                  </div>
+                </div>
+             </div>
+             <div class="bg-wrapper">
+
+                <div class="row">
+                  <div class="col-12 col-sm-4">Contraseña</div>
+                  <div class="col-12 col-sm-8 pass-col"><input type="text" value="••••••••••" readonly />
+                     <a title="Cambiar contraseña" href="/account/password"><i class="icon-edit"></i></a>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-4">Celular</div>
+                  <div class="col-12 col-sm-8">
+                     <input :class="[formErrors.celular ? 'is-invalid' : '']" v-model.trim="formData.celular" required type="text" minlength="10" maxlength="15" />
+                     <div class="invalid-feedback celular-error">El celular sólo debe contener números</div>
+                  </div>
+
+                </div>
+                <div class="form-group">
+                   <ajax-button type="submit" v-if="!populatedUser.profileConfirmed" :syncing="syncing" class="btn-dark btn-lg btn-block">CONFIRMAR</ajax-button>
+                   <ajax-button type="submit" v-else :syncing="syncing" class="btn-dark btn-lg btn-block">GUARDAR CAMBIOS</ajax-button>
+                </div>
+                <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+             </div>
+          </ajax-form>
+        </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

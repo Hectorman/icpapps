@@ -1,0 +1,56 @@
+<div class="outter-wrapper split-screen">
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+         <div class="titulo">
+            <img src="/images/ecopetrol-icon.png" />
+            <h1>Demostraciones</h1>
+         </div>
+
+         <div>
+            <img src="/images/logo-ecopetrol.png" />
+         </div>
+
+         <div>
+            <img src="/images/concept.png" />
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div id="nueva-demostracion" v-cloak>
+        <div class="container cloak">
+          <p>Bienvenido,</p>
+          <h1>A continuación agregue el Proyecto de Demostración en el cual va a trabajar.</h1>
+
+          <button @click="showInputClick" class="secondary-btn agregar-demostracion"><i class="icon-plus"></i> AGREGAR DEMOSTRACIÓN</button>
+
+          <div class="nombre-form" >
+             <ajax-form action="crearDemostracion" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+                <div class="form-group">
+                  <label>Nombre de Demostración</label>
+                  <input type="text" required maxlength="200" class="nombre-input" v-model="formData.nombre"  />
+                  <p class="text-danger" v-if="formErrors.nombre">Debes ingresar un nombre válido.</p>
+                  <p class="text-danger" v-if="formErrors.nombreCorto">El nombre es muy corto.</p>
+                </div>
+
+                <div class="form-group">
+                   <ajax-button type="submit" :syncing="syncing" class="btn-block primary-btn">EMPEZAR DEMOSTRACIÓN</ajax-button>
+                </div>
+                <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+             </ajax-form>
+           </div>
+        </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

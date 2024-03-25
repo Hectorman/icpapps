@@ -1,0 +1,337 @@
+<div id="bienvenido" class="outter-wrapper ultra-wide-open">
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+        <div>
+
+            <div class="logo-top">
+                <img src="/images/icon.png"
+                    srcset="/images/icon@2x.png 2x,
+                            /images/icon@3x.png 3x"
+                    class="icon">
+            </div>
+
+            <nav>
+
+                <ul>
+                <li class="active home-btt">
+                    <a href="/bienvenido"><i class="icon-speedometer"></i></a>
+                    <div class="decor"></div>
+                    </li> 
+                <li>
+                    <a href="/demostraciones/up">Up</a>
+                    <div class="decor"></div>
+                    </li>
+                <li>
+                    <a href="/demostraciones/mid">Mid</a>
+                    <div class="decor"></div>
+                    </li>
+                <li>
+                    <a href="/demostraciones/down">Down</a>
+                    <div class="decor"></div>
+                    </li>
+                </ul>
+
+            </nav>
+
+        </div>   
+
+         <div class="logo-icp">
+
+            <img src="/images/logo-icp.svg" />
+
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+       <div class="bienvenido-wrapper">
+
+            <h2>Resumen de Progreso de Demostraciones</h2>
+
+            <div class="row">
+
+                <div class="col-12 col-lg-6 big-square progreso-total">
+
+                    <div class="box">
+
+                        <div class="row total-row">
+
+                            <div class="col-12 col-md-6 col-lg-7">
+
+                                <h3>Progreso Total<br /> de Demostraciones</h3>
+
+                                <div class="barlines">
+
+                                    <div>
+                                        <div class="bar">
+                                            <div :style="'width:' + porcentajeTranscurrido + '%;'"></div>
+                                        </div>
+
+                                        <p>Avance Actividades</p>    
+                                    </div>
+
+                                    <div>
+                                        <div class="bar">
+                                            <div :style="'width:' + avanceRealTotalPercent + '%;'"></div>
+                                        </div>
+
+                                        <p>Avance Real</p>    
+                                    </div>
+
+                                    <div>
+                                        <div class="bar">
+                                            <div :style="'width:' + cumplimientoTotal + '%;'"></div>
+                                        </div>
+
+                                        <p>Cumplimiento</p>    
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-5">
+
+                                <div class="graph-wrapper big scalep-up">
+
+                                    <div class="avance-chart ct-chart ct-perfect-fourth"></div>
+
+                                    <div class="avance-label">
+
+                                        <h3><span class="count">{{ avanceRealTotalPercent }}</span>%</h3>
+                                        <p>Completado</p>
+
+                                    </div>
+
+                                    <div class="percent-labels">
+
+                                        <span>0%</span>
+                                        <span>100%</span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-lg-6 big-square line-chart-wrapper">
+
+                    <div class="box">
+
+                        <h3>Actualización de actividades</h3>
+
+                        <div class="line-chart">
+
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div><!-- /row -->
+
+            <div class="row">
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <a href="/demostraciones/up" class="box area-box">
+
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <h4>Área de <br /> Implementación </h4>
+
+                                <span  class="area-btt">UP</span>
+
+                                <p>Demostraciones totales</p>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="graph-wrapper scaled-up">
+
+                                    <div class="up-chart ct-chart ct-perfect-fourth"></div>
+
+                                    <div class="avance-label">
+
+                                        <h3><span class="count">{{ avanceUp }}</span>%</h3>
+                                        <p>Completado</p>
+
+                                    </div>
+
+                                    <div class="percent-labels">
+
+                                        <span>0%</span>
+                                        <span>100%</span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="avance-footer">
+
+                            <span class="cont">
+
+                                <span>Demostraciones UP</span>
+
+                                <i class="icon-arrow"></i>
+
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div><!-- /col-4 -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <a href="/demostraciones/mid" class="box area-box">
+
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <h4>Área de<br /> Implementación </h4>
+
+                                <span class="area-btt">MID</span>
+
+                                <p>Demostraciones totales</p>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="graph-wrapper scaled-up">
+
+                                    <div class="mid-chart ct-chart ct-perfect-fourth"></div>
+
+                                    <div class="avance-label">
+
+                                        <h3><span class="count">{{ avanceMid }}</span>%</h3>
+                                        <p>Completado</p>
+
+                                    </div>
+
+                                    <div class="percent-labels">
+
+                                        <span>0%</span>
+                                        <span>100%</span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="avance-footer">
+
+                            <span class="cont">
+
+                                <span>Demostraciones MID</span>
+
+                                <i class="icon-arrow"></i>
+
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div><!-- /col-4 -->
+
+                <div class="col-12 col-md-6 col-lg-4">
+
+                    <a href="/demostraciones/down" class="box area-box">
+
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <h4>Área de<br /> Implementación </h4>
+
+                                <span class="area-btt">DOWN</span>
+
+                                <p>Demostraciones totales</p>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="graph-wrapper scaled-up">
+
+                                    <div class="down-chart ct-chart ct-perfect-fourth"></div>
+
+                                    <div class="avance-label">
+
+                                        <h3><span class="count">{{ avanceDown }}</span>%</h3>
+                                        <p>Completado</p>
+
+                                    </div>
+
+                                    <div class="percent-labels">
+
+                                        <span>0%</span>
+                                        <span>100%</span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="avance-footer">
+
+                            <span class="cont">
+
+                                <span>Demostraciones DOWN</span>
+
+                                <i class="icon-arrow"></i>
+
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                </div><!-- /col-4 -->
+
+            </div>
+
+        </div><!-- bienvenido-wrapper -->
+
+        <div class="footer">
+
+            <a target="_blank" href="https://agenciatesla.com/">Design by: Agencia Tesla</a>
+
+        </div>
+
+   </div><!-- /end-col-->
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

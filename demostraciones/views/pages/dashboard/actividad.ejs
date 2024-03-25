@@ -1,0 +1,510 @@
+<div id="actividad" class="outter-wrapper wide-open">
+
+   <div id="avances-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+      <div class="notas-list">
+
+         <transition-group name="fade">
+
+            <div v-for="(item, index) in currentActivity.avances" :key="'nota' + index" class="nota-item">
+
+               <span>Avance {{ index + 1 }}</span>
+
+               <span class="date"><js-timestamp :at="item.createdAt" format="calendar"></js-timestamp></span>
+
+               <div class="nota-content">
+
+                  {{ item.avance }}
+
+               </div>
+
+            </div>
+
+         </transition-group>
+
+      </div>
+
+      <div class="avance-form default-form">
+
+         <label>Agregar avance</label>
+
+         <textarea placeholder="¿Alguna novedad en esta actividad?" name="avance"></textarea>
+         <p class="text-danger avance-error">Debes escribir algo</p>
+
+         <div class="buttons">
+
+            <button class="primary-btn subtle" @click="cerrarAvances">CANCELAR</button>
+            <button class="primary-btn" id="agregarNota" @click="agregarAvance">GUARDAR</button>
+
+         </div>
+
+         <p class="text-danger server-error">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+      </div>
+
+   </div>
+
+   <div id="notas-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+      <h2>Experimento de Actividad - 01</h2>
+
+      <div class="notas-list">
+
+         <transition-group name="fade">
+
+            <div v-for="(item, index) in listaNotas" :key="'nota' + index" class="nota-item">
+
+               <span>Nota {{ index + 1 }}</span>
+
+               <span class="date"><js-timestamp :at="item.createdAt" format="calendar"></js-timestamp></span>
+
+               <div class="nota-content">
+
+                  {{ item.nota }}
+
+               </div>
+
+            </div>
+
+         </transition-group>
+
+      </div>
+
+      <div class="nota-form default-form">
+
+         <label>Agregar nota</label>
+
+         <textarea placeholder="¿Alguna novedad en este experimento?" name="nota"></textarea>
+         <p class="text-danger nota-error">Debes escribir algo</p>
+
+         <div class="buttons">
+
+            <button class="primary-btn subtle" @click="cerrarNotas">CANCELAR</button>
+            <button class="primary-btn" id="agregarNota" @click="agregarNota">GUARDAR</button>
+
+         </div>
+
+         <p class="text-danger server-error">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+      </div>
+
+   </div>
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+         <div class="logo-top">
+            <img src="/images/icon.png"
+                 srcset="/images/icon@2x.png 2x,
+                         /images/icon@3x.png 3x"
+                 class="icon">
+            <img src="/images/title.png"
+                 srcset="/images/title@2x.png 2x,
+                         /images/title@3x.png 3x"
+                 class="title">
+         </div>
+
+         <div class="titulo-demostracion">
+
+            <p>Demostración</p>
+
+            <h1>{{ demo.nombre }}</h1>
+
+         </div>
+
+         <nav>
+
+            <ul>
+               <li>
+                  <a :href="'/demostracion/' + demo.id">Información General</a>
+                  <div class="decor"></div>
+               </li>
+               <li class="active">
+                  <a :href="'/actividad/1/' + demo.id">Actividades</a>
+                  <div class="decor"></div>
+               </li>
+            </ul>
+
+         </nav>
+
+         <div :class="demo.colorClass" class="avance-graph demo-chart">
+
+            <h2>Progreso<br /> de Demostración</h2>
+
+            <div class="graph-wrapper">
+
+               <div class="ct-chart ct-perfect-fourth"></div>
+
+               <div class="avance-label">
+
+                  <h3>{{ Math.floor( demo.avanceDiligenciadas ) }}%</h3>
+                  <p>Completado</p>
+
+               </div>
+
+               <div class="percent-labels">
+
+                  <span>0%</span>
+                  <span>100%</span>
+
+               </div>
+
+            </div>
+
+            <div class="avance-footer">
+
+               <a :href="'/resumen/' + demo.id" class="cont">
+
+                  <span>Ver Resumen</span>
+
+                  <i class="icon-arrow"></i>
+
+               </a>
+
+            </div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div class="demo-infotabs">
+
+         <div class="saltar-actividad">
+
+            <label>Ir a la actividad</label>
+
+            <select @change="saltarActividad">
+               <option v-for="index in cuentaActividades" :value="index" >{{index}}</option>
+            </select>
+
+         </div>
+
+         <nav>
+
+            <div class="owl-wrapper">
+
+               <div class="owl-carousel owl-theme">
+                  <div @click="activityClick" class="nombre-act" v-for="(item, index) in nombresActividades"><span>{{item.orden}}</span>{{item.nombre}}</div>
+               </div>
+
+            </div>
+
+         </nav>
+
+         <div class="tab-content">
+
+            <div style="display:block" class="tab active">
+
+               <ajax-form class="default-form form-uno" action="actualizarActividad" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+                  <div v-if="ordenActividad == 1">
+
+                     <h2>Especifique Sistema de Prueba Identificado</h2>
+                     
+                     <div class="row">
+                        <div class="col">
+                           <div class="form-group">
+                              <label>(En máximo 120 caracteres)</label>
+                              <input type="text" required maxlength="120" v-model="formData.sistemaPrueba" focus-first />
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+
+                  <div v-if="ordenActividad > 1 && ordenActividad < 24">
+
+                     <h2>¿En esta Demostración aplica o no aplica esta actividad?</h2>
+
+                     <div class="radio-row">
+
+                        <label class="radio-container">Aplica
+                           <input @change="aplicaChange" v-model="formData.aplica" value="true" type="radio" name="aplica">
+                           <span class="checkmark"></span>
+                        </label>
+
+                        <label class="radio-container">No Aplica
+                           <input @change="aplicaChange" v-model="formData.aplica" value="false" type="radio" name="aplica">
+                           <span class="checkmark"></span>
+                        </label>
+
+                     </div>
+
+                     <div :class="formData.aplica == true ? 'si-aplica' : ''" class="row descripcion-row">
+                        <div class="col">
+                           <div class="form-group">
+                              <label>Descripción</label>
+                              <textarea focus-first v-model="formData.descripcion" :disabled="formData.aplica !== true" placeholder="Agregue descripción de Actividad"></textarea>
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+
+                  <div v-if="ordenActividad == 24">
+
+                     <h2>Notas sobre el avance</h2>
+                     
+                     <div class="row">
+                        <div class="col">
+                           <div class="form-group">
+                              <textarea v-model="formData.notasAvance" ></textarea>
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+
+                  <div v-if="ordenActividad == 25">
+
+                     <h2>Riesgos y Alertas</h2>
+                     
+                     <div class="row">
+                        <div class="col">
+                           <div class="form-group">
+                              <textarea v-model="formData.notasAvance" ></textarea>
+                           </div>
+                        </div>
+                     </div>
+
+                  </div>
+
+                  <div v-if="ordenActividad == 1 || formData.aplica !==true || ordenActividad > 23" class="form-group btt-wrapper only-next">
+                     <ajax-button  type="submit" :syncing="syncing" class="btn-block primary-btn guardar-continuar">Guardar y Continuar</ajax-button>
+                  </div>
+
+                  <div v-else class="form-group btt-wrapper">
+                     <a @click="prevTab" href="#" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a>
+                     <ajax-button type="submit" :syncing="syncing" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></ajax-button>
+                  </div>
+
+                  <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+               </ajax-form>
+
+               <router-view></router-view>
+
+            </div><!-- /tab-->
+
+            <div class="tab">
+
+               <ajax-form class="default-form avance-form" action="actualizarActividad" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+                  
+                  <div class="row fechas-actividad">
+                     <div class="col-12 col-sm-6" :class="currentActivity.orden == 2 ? 'col-lg-4' : 'col-lg-6'">
+                        <div class="form-group calendar-wrapper">
+                           <label>Fecha Inicial de Actividad</label>
+                           <input required data-name="fechaInicial" readonly class="datepicker-input fecha-inicial" placeholder="Seleccione Fecha" type="text" required v-model="formData.fechaInicial" />
+                           <p class="text-danger" v-if="formErrors.fechaInicial">Debes ingresar una fecha inicial.</p>
+                        </div>
+                     </div>
+                     <div class="col-12 col-sm-6" :class="currentActivity.orden == 2 ? 'col-lg-4' : 'col-lg-6'">
+                        <div class="form-group calendar-wrapper">
+                           <label>Fecha Final de Actividad</label>
+                           <input required data-name="fechaFinal" readonly class="datepicker-input fecha-final" placeholder="Seleccione Fecha" type="text" required v-model="formData.fechaFinal" />
+                           <p class="text-danger" v-if="formErrors.fechaFinal">Debes ingresar una fecha inicial.</p>
+                        </div>
+                     </div>
+
+                     <div v-if="currentActivity.orden == 2" class="col-12 col-lg-4">
+                        <div class="form-group">
+                           <a @click="abrirCrearExperimento" href="#" class="secondary-btn agregar-experimento"><i class="icon-plus"></i> AGREGAR EXPERIMENTO</a>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div>
+
+                     <div v-for="(item, index) in currentActivity.experimentos" class="exp-form existent">
+
+                        <div class="row">
+
+                           <div class="col-12 col-lg-3">
+                              <div class="form-group">
+                                 <p>{{item.nombre}}</p>
+                                 <label>Nombre Experimento</label>
+                              </div>
+                           </div>
+
+                           <div class="col-12 col-sm-5 col-lg-3">
+                              <div class="form-group">
+                                 <p>{{ dateFromNumberToString( item.fechaInicial ) }}</p>
+                                 <label>Fecha de Inicio</label>
+                              </div>
+                           </div>
+
+                           <div class="col-12 col-sm-5 col-lg-3">
+                              <div class="form-group">
+                                 <p>{{ dateFromNumberToString(item.fechaFinal) }}</p>
+                                 <label>Fecha de Vencimiento</label>
+                              </div>
+                           </div>
+
+                           <div class="col-6 col-sm-2 col-lg-1 buttons">
+                              <a @click="abrirNotas" href="#" title="Agregar notas" :syncing="syncing" class="btn-block"><i style="font-size:.9em;" class="icon-edit"></i></a>
+                           </div>
+
+                           <div class="col-6 col-sm-2 col-lg-1 buttons">
+                              <a @click="abrirNotas" href="#" title="Ver notas" :syncing="syncing" class="btn-block"><i class="icon-eye hide-form"></i></a>
+                           </div>
+
+                           <div class="col-6 col-sm-2 col-lg-1 buttons">
+                              <a @click="borrarExperimento" href="#" title="Eliminar experimento" :syncing="syncing" class="btn-block"><i class="icon-trash hide-form"></i></a>
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+                  <div id="new-exp" class="exp-form custom-error">
+
+                     <div class="row">
+
+                        <div class="col-4">
+                           <div class="form-group">
+                              <label>Nombre Experimento</label>
+                              <input type="text" name="nombre-experimento" />
+                              <p class="text-danger">Debes llenar este campo</p>
+                           </div>
+                        </div>
+
+                        <div class="col-3">
+                           <div class="form-group calendar-wrapper">
+                              <label>Fecha de Inicio</label>
+                              <input readonly class="datepicker-exp" placeholder="Seleccione Fecha" type="text" required name="fecha-inicial" />
+                              <p class="text-danger">Debes ingresar una fecha inicial.</p>
+                           </div>
+                        </div>
+
+                        <div class="col-3">
+                           <div class="form-group calendar-wrapper">
+                              <label>Fecha de Vencimiento</label>
+                              <input readonly class="datepicker-exp" placeholder="Seleccione Fecha" type="text" required name="fecha-final" />
+                              <p class="text-danger">Debes ingresar una fecha final.</p>
+                           </div>
+                        </div>
+
+                        <div class="col-2 buttons">
+                           <span @click="crearExperimento" title="guardar" :syncing="syncing" class="btn-block secondary-btn nav-btn check-btn"><i class="icon-check"></i></span>
+                           <span @click="cerrarCrearExperimento" title="cancelar" class="btn-block secondary-btn nav-btn close-btn"><i class="icon-close"></i></span>
+                        </div>
+
+                     </div>
+
+                     <p class="text-danger">Ocurrio un error, inténtalo de nuevo más tarde</p>
+
+                  </div>
+
+                  <div class="row planificado">
+                     <div class="col">
+                        <div class="progress-line">
+
+                           <div class="label-row">
+                              <label><span class="transcurrido">0</span>% de lo planificado</label>
+                              <label class="dias-asignados">0 días asignados</label>
+                           </div>
+
+                           <div class="bar">
+                              <div style="width:0%"></div>
+                           </div>
+
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-12 col-xl-6">
+                        <div class="form-group">
+                           <div class="equipo-wrapper">
+                              <div class="title">
+                                 <h3>Avance Real de Actividad</h3>
+                                 <p>En valores de porcentaje</p>
+                              </div>
+                              
+                              <div class="avance-real"><input @input="avanceRealChange" min="0" max="100" type="number" v-model="formData.avanceReal" /> %</div>
+                           </div>   
+                        </div>
+                     </div>
+                     <div class="col-12 col-xl-6">
+                        <div style="height:100%" class="form-group">
+                           <div class="equipo-wrapper cumpli-label">
+                              <div class="title">
+                                 <h3>Cumplimiento de Actividad</h3>
+                                 <p>En valores de porcentaje</p>
+                              </div>
+                              
+                              <div class="cumplimiento">0%</div>
+                           </div>   
+                        </div>
+                     </div>  
+                  </div>
+
+                  <div class="form-group btt-wrapper">
+                     <a href="#" @click="prevTab" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a>
+                     <ajax-button type="submit" :syncing="syncing" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></ajax-button>
+                  </div>
+
+                  <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+               </ajax-form>
+
+            </div><!-- /tab-->
+
+            <div class="tab">
+
+               <ajax-form class="default-form" action="actualizarActividad" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+                  <div class="row">
+                     <div class="col">
+                        <div class="form-group avance-group">
+                           <label>Avances</label>
+                           
+                           <a href="#" @click="abrirAvances" class="primary-btn"><i class="icon-plus"></i> Agregar avance</a>
+                           <a href="#" @click="abrirAvances" class="primary-btn hide-form">Ver avances</a>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col">
+                        <div class="form-group">
+                           <label>¿Necesitas ayuda para lo que se viene?</label>
+                           <textarea v-model="formData.ayudaPaLoQueViene" ></textarea>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col">
+                        <div class="form-group">
+                           <label>¿Qué necesita para ponerse al día?</label>
+                           <textarea v-model="formData.ponerseAlDia" ></textarea>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="form-group btt-wrapper">
+                     <a href="#" @click="prevTab" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a>
+                     <ajax-button  type="submit" :syncing="syncing" class="btn-block primary-btn guardar-continuar">Guardar y Continuar</ajax-button>
+                  </div>
+
+               </ajax-form>
+
+            </div><!-- /tab-->
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

@@ -1,0 +1,333 @@
+<div id="demostracion" class="outter-wrapper wide-open">
+
+   <div id="integrantes-popup" class="white-popup demo-popup mfp-hide">
+
+      <h2>Integrantes de Demostración</h2>
+
+      <div> 
+         <form class="default-form add-inte-form custom-error" method="POST" v-for="(integrante, index) in demo.integrantes" @submit="agregarIntegrante">     
+
+            <div v-if="!integrante.showform">
+               
+               <div class="inte-info">
+
+                  <div class="avatar">
+                     <i class="icon-user"></i>
+                  </div>
+   
+                  <div class="inte-nombre">
+   
+                     <h3>{{integrante.nombre}}</h3>
+                     <p>Integrante {{index+1}}</p>
+   
+                  </div>
+   
+                  <div class="actions">
+                     <a title="editar" @click="editInte" href="#"><i class="icon-edit"></i></a>
+                  </div>
+   
+               </div>
+
+            </div>
+
+            <div v-else>
+               <label>Nombre Integrante {{index+1}}</label>   
+               <div class="custom-row">
+                  <div>
+                     <input v-on:change="integranteChange" :value="integrante.nombre" type="text" required maxlength="200" name="nombre" />
+                     <p class="text-danger integranteErrors-nombre">Debes ingresar un nombre válido.</p>
+                     <p class="text-danger integranteErrors-nombreCorto">El nombre es muy corto.</p>
+                  </div>
+                  <div>
+                     <ajax-button type="submit" title="guardar" :syncing="syncing" class="btn-block secondary-btn nav-btn check-btn"><i class="icon-check"></i></ajax-button>
+                  </div>
+                  <div>
+                     <a href="#" @click="borrarIntegrante" title="borrar" class="btn-block secondary-btn nav-btn close-btn"><i class="icon-trash"></i></a>
+                  </div>
+               </div>
+            </div>
+         
+         </form>
+      </div>
+
+      <a href="#" @click="agregarOtroIntegrante" class="secondary-btn agregar-integrantes"><i class="icon-plus"></i> agregar otro integrante</a>
+
+   </div>
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+         <div class="logo-top">
+            <img src="/images/icon.png"
+                 srcset="/images/icon@2x.png 2x,
+                         /images/icon@3x.png 3x"
+                 class="icon">
+            <img src="/images/title.png"
+                 srcset="/images/title@2x.png 2x,
+                         /images/title@3x.png 3x"
+                 class="title">
+         </div>
+
+         <div class="titulo-demostracion">
+
+            <p>Demostración</p>
+
+            <h1>{{ demo.nombre }}</h1>
+
+         </div>
+
+         <nav>
+
+            <ul>
+               <li class="active">
+                  <a :href="'/demostracion/' + demo.id">Información General</a>
+                  <div class="decor"></div>
+               </li>
+               <li>
+                  <a :href="'/actividad/1/' + demo.id">Actividades</a>
+                  <div class="decor"></div>
+               </li>
+            </ul>
+
+         </nav>
+
+         <div :class="demo.colorClass" class="avance-graph">
+
+            <h2>Progreso<br /> de Demostración</h2>
+
+            <div class="graph-wrapper">
+
+               <div class="ct-chart ct-perfect-fourth"></div>
+
+               <div class="avance-label">
+
+                  <h3><span class="count">{{ demo.avanceDiligenciadas }}</span>%</h3>
+                  <p>Completado</p>
+
+               </div>
+
+               <div class="percent-labels">
+
+                  <span>0%</span>
+                  <span>100%</span>
+
+               </div>
+
+            </div>
+
+            <div class="avance-footer">
+
+               <a :href="'/resumen/' + demo.id" class="cont">
+
+                  <span>Ver Resumen</span>
+
+                  <i class="icon-arrow"></i>
+
+               </a>
+
+            </div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div class="demo-infotabs">
+
+         <nav>
+
+            <ul>
+               <li class="active"><span>1</span>Detalles de Demostración</li>
+               <li><span>2</span>Modelos de Desarrollo</li>
+               <li><span>3</span>Nivel de Madurez a Alcanzar</li>
+            </ul>
+
+         </nav>
+
+         <div class="tab-content">
+
+            <div style="display:block" class="tab active detalles-demostracion-tab">
+
+               <ajax-form class="default-form detalles-demostracion-form custom-error" action="detallesDemostracion" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+                  <div class="row">
+                     <div class="col-12 col-lg-6">
+                        <div class="form-group">
+                           <label>Nombre Lider de Demostración</label>
+                           <input type="text" required class="capitalize" required maxlength="200" v-model="formData.nombreLider"  />
+                           <p class="text-danger formErrors-nombreLider">Debes ingresar un nombre válido.</p>
+                           <p class="text-danger formErrors-nombreLiderCorto">El nombre es muy corto.</p>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6">
+                        <div class="form-group">
+                           <label>Nombre Jefe de Demostración</label>
+                           <input type="text" required class="capitalize autocomplete-nombre" maxlength="200" v-model="formData.nombreJefe"  />
+                           <p class="text-danger formErrors-nombreJefe">Debes ingresar un nombre válido.</p>
+                           <p class="text-danger formErrors-nombreJefeCorto">El nombre es muy corto.</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="row">
+                     <div class="col-6 col-xl-4">
+                        <div class="form-group">
+                           <label>Departamento</label>
+                           <select v-model="formData.departamento">
+                              <option :value="departamento" v-for="departamento in listaGerencias[ formData.gerencia ]">{{ departamento }}</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-6 col-xl-4">
+                        <div class="form-group">
+                           <label>Gerencia</label>
+                           <select @change="autoSelectDepartamento" v-model="formData.gerencia">
+                              <option :value="gerencia" v-for="( departamentos, gerencia ) in listaGerencias">{{ gerencia }}</option>
+                           </select>
+                        </div>
+                     </div>
+                     <div class="col-12 col-xl-4">
+                        <div class="form-group">
+                           <label>Área de Implementación</label>
+                           <select v-model="formData.areaImplementacion">
+                              <option :value="item.valor" v-for="item in areasImplementacion">{{ item.valor }}</option>
+                           </select>
+                           <p class="text-danger formErrors-areaImplementacion">Debes escoger un área de implementación</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div v-if="savedIntes" >
+                     <div class="form-group">
+                        <div class="equipo-wrapper">
+                           <div class="title">
+                              <h3>Integrantes de Demostración</h3>
+                              <p>Miembros de Equipo</p>
+                           </div>
+                           <div class="avatars">
+                              <div v-for="(integrante, index) in savedIntesArray" class="avatar">
+                                 <i v-if="index < 3" class="icon-user"></i>
+                                 <span v-else>+{{ savedIntesArray.length - 3 }}</span>
+                              </div>
+                           </div>
+                           <a href="#" @click="agregarIntegrantes" class="secondary-btn agregar-integrantes"><i class="icon-edit"></i> EDITAR INTEGRANTES</a>
+                        </div>   
+                     </div>
+                  </div>
+
+                  <div v-else class="row">
+                     <div class="col-12 col-xl-4">
+                        <div class="form-group">
+                           <a href="#" @click="agregarIntegrantes" class="secondary-btn agregar-integrantes"><i class="icon-plus"></i> AGREGAR INTEGRANTES</a>
+                        </div>
+                     </div>
+                  </div>
+  
+                  <div class="form-group btt-wrapper only-next">
+                     <!-- <a href="#" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a> -->
+                     <ajax-button type="submit" :syncing="syncing" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></ajax-button>
+                  </div>
+                  <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+               </ajax-form>
+
+            </div>
+
+            <div class="tab modelo-desarrollo-tab">
+
+               <ajax-form class="default-form modelo-desarrollo-form custom-error" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleModeloParsing" action="modeloDesarrollo" @submitted="modeloSubmitted()">
+
+                  <input type="hidden" v-model="modeloData.id"  />
+                  
+                  <label>Seleccione el Modelo de Desarrollo</label>
+
+                  <div class="radio-row">
+
+                     <label class="radio-container">Interno (ICP)
+                        <input v-model="modeloData.modelo" value="interno" class="modelo-interno" type="radio" name="radio">
+                        <span class="checkmark"></span>
+                     </label>
+
+                     <label class="radio-container">Codesarrollo
+                        <input v-model="modeloData.modelo" value="codesarrollo" class="modelo-codesarrollo" type="radio" name="radio">
+                        <span class="checkmark"></span>
+                     </label>
+
+                  </div>
+
+                  <div class="row nombre-aliado-row">
+                     <div class="col">
+                        <div class="form-group">
+                           <label>Nombre de Aliado (en codesarrollo)</label>
+                           <input type="text" placeholder="Indique el nombre del Aliado" maxlength="200" v-model="modeloData.nombreAliado"  />
+                           <p class="text-danger modeloErrors-nombreAliado">Debes ingresar un nombre válido.</p>
+                           <p class="text-danger modeloErrors-nombreAliadoCorto">El nombre es muy corto.</p>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div class="form-group btt-wrapper">
+                     <a href="#" @click="prevTab" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a>
+                     <ajax-button type="submit" :syncing="syncing" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></ajax-button>
+                  </div>
+                  <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+               </ajax-form>
+
+            </div>
+
+            <div class="tab madurez-tab">
+
+               <h2>Seleccione el Modelo de Madurez de la Tecnología a Alcanzar</h2>
+
+               <p>En aras de proveer un marco de entendimiento sobre el estado de una tecnología, Ecopetrol ha adoptado los niveles de madurez de tecnología utilizados por la NASA y COLCIENCIAS conocidos como TRL - Technology Readiness Level, los cuales se describen en la siguiente gráfica.</p>
+
+               <ajax-form class="default-form madurez-form custom-error" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleMadurezParsing" action="nivelMadurez" @submitted="madurezSubmitted()">
+
+                  <div class="nivel-row">
+
+                     <div v-for="(nivel, index) in nivelesData" :key="'nivel-' + index" class="nivel-opt">
+
+                        <div @click="etiqueteClick" class="etiquete">
+
+                           <div class="name">{{nivel}}</div>
+
+                           <i :class="'icon-icon-' + (index+1)"></i>
+
+                           <div class="number">{{ index + 1 }}</div>
+
+                        </div>
+
+                        <label class="radio-container">	&nbsp;
+                           <input v-model="madurezData.nivel" :value="index+1" name="nivel" @change="nivelRadioChange" type="radio">
+                           <span class="checkmark"></span>
+                        </label>
+
+                     </div>
+
+                  </div>
+
+                  <div class="form-group"><p class="text-danger madurezErrors-nivel">Debes escojer un nivel.</p></div>
+
+                  <div class="form-group btt-wrapper">
+                     <a href="#" @click="prevTab" class="btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></a>
+                     <ajax-button type="submit" :syncing="syncing" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></ajax-button>
+                  </div>
+                  <p class="text-danger" v-if="cloudError">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+               </ajax-form>
+            
+            </div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
