@@ -1,0 +1,44 @@
+<div class="side-list">
+  
+   <div class="titulo">
+      <img src="/images/ecopetrol-icon.png" />
+      <h1>Beneficios Tributarios</h1>
+   </div>
+
+   <h2>Bienvenido a tu tablero de BT.</h2>
+
+   <div class="search-wrapper">
+
+      <i class="icon-search"></i>
+
+      <input type="text" placeholder="Buscar Beneficio Tributario…" />
+
+   </div>
+
+   <h3>Proyectos ({{ beneficios.length }})</h3>
+
+   <div class="beneficios-list">
+
+      <div v-if="me.rolBeneficios == 'profesional'" class="more">
+
+         <a href="/nuevo-beneficio" class="thumb">
+
+            <i class="icon-plus"></i>
+
+         </a>
+
+         <h4><a href="/nuevo-beneficio">Agregar</a></h4>
+
+      </div>
+
+      <div :class="beneficio && beneficio.id == item.id ? 'active' : ''" v-for="item in beneficios">
+
+         <a :href="'/beneficio/' + item.id" class="thumb">BT</a>
+
+         <h4><a :href="'/beneficio/' + item.id">{{ item.titulo }}</a></h4>
+
+      </div>
+
+   </div>
+
+</div>

@@ -1,0 +1,495 @@
+<div id="bienvenido" class="outter-wrapper wide-open">
+
+   <div class="end-col">
+
+      <div class="vpages-wrapper">
+
+        <div style="display:none;" id="bienvenido-page" class="bienvenido-wrapper virtual-page">
+
+              <h2>ICP Comisiones</h2>
+
+              <div class="gerencias">
+
+                <div v-for="gerencia in listaGerencias" class="gerencia list-item">
+
+                  <a @click="virtualNav" :href="'/bienvenido/' + gerencia.valor.toLowerCase()" class="title">
+
+                    <div>
+
+                      <h2>{{ gerencia.valor }}</h2>
+
+                      <p>Comisión</p>
+
+                    </div>
+
+                    <div>
+
+                      <i class="icon-arrow"></i>
+
+                    </div>
+
+                  </a>
+
+                  <div class="totals">
+
+
+                  </div>
+
+                </div>
+
+              </div>
+
+          </div><!-- bienvenido-wrapper -->
+
+          <div style="display:none;" id="historial-page" class="admin-content virtual-page">
+
+              <a class="back" @click="virtualNav" href="/bienvenido"><i class="icon-arrow"></i> Comisiones {{ virtualSlug }}</a>
+    
+              <div class="filters">
+                   
+                <div class="select-filter">
+                  <label>Tipo de viaje</label>
+                  <select class="filter-tipo" @change="filterTipo">
+                    <option value="false" selected="selected">Todos</option>
+                    <option value="nacional">Nacional</option>
+                    <option value="internacional">Internacional</option>
+                  </select>
+                </div>
+  
+              </div>
+              
+              <div class="comisiones-list">
+    
+                <div v-for="(comision, index) in comisionesHistorial" :key="'comision-' + index" :class="comision.tipoDestino == 'nacional' && 'nacional'" class="comision list-item">
+    
+                  <div>
+                    <h3 class="capitalize">{{ comision.nombres }}</h3>
+                    <p>Nombre</p>
+                    <i @click="moreInfo" class="icon-eye trigger-more-info"></i>
+                  </div>
+    
+                  <div>
+                    <h3>{{ comision.ciudad }}</h3>
+                    <p>Destino</p>
+                  </div>
+    
+                  <div>
+                    <h3>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) ) }}</h3>
+                    <p>Días de Comisión</p>
+                  </div>
+    
+                  <div>
+                    <h3 class="overflow-text">{{ comision.objeto }}</h3>
+                    <p>Objetivo de Comisión</p>
+                  </div>
+    
+                  <div>
+    
+                    <div v-if="comision.urgente">
+                      <span class="color-ind urgente"></span>
+                      <p>Solicitud Urgente</p>
+                    </div>
+    
+                    <div v-else>
+                      <div v-if="comision.extemporanea">
+                        <span class="color-ind extra"></span>
+                        <p>Solicitud Extemporánea</p>
+                      </div>
+                      <div v-else>
+                        <span class="color-ind atiempo"></span>
+                        <p>Solicitud a Tiempo</p>
+                      </div>
+                    </div>
+    
+                  </div>
+    
+                  <div class="cancel-row btt-row state">
+                    <button v-if="virtualSlug == 'rechazadas'" title="rechazado" data-action="rechazado" class="cancel"><i class="icon-close"></i></button>
+                    <button v-if="virtualSlug == 'aprobadas'" title="aprobado"  data-action="aprobado" class="check"><i class="icon-check"></i></button>
+                    <button v-if="virtualSlug == 'pendientes'" title="pendiente"  data-action="aprobado" class="pending"><i class="icon-clock"></i></button>
+                  </div>
+    
+                  <div class="btt-row end-row">
+                     <h3>{{ comision.gerencia }}</h3>
+                  </div>
+
+                  <div class="more-info">
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Nombre</div>
+                        <div class="capitalize">{{ comision.nombres }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Destino</div>
+                        <div>{{ comision.ciudad }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Fecha Inicial</div>
+                        <div><js-timestamp format="calendar" :at="comision.fechaInicial"></div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Fecha Final</div>
+                        <div><js-timestamp format="calendar" :at="comision.fechaFinal"></div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Días de Comisión</div>
+                        <div>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) ) }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Departamento</div>
+                        <div>{{ comision.departamento }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Gerencia</div>
+                        <div>{{ comision.gerencia }}</div>
+                      </div>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Objetivo Comisión</h3>
+
+                      <p class="objeto-comision">{{ comision.objeto }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Impacto Comisión</h3>
+
+                      <p class="objeto-comision">{{ comision.impactoComision }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Observaciones</h3>
+
+                      <p class="objeto-comision">{{ comision.observaciones }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Entidad</div>
+                        <div class="capitalize">{{ comision.entidad }}</div>
+                      </div>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Tipo de Comisión</div>
+                        <div class="capitalize">{{ comision.tipoComision }}</div>
+                      </div>
+
+                    </div>
+
+                  </div>
+    
+                </div>
+    
+              </div>
+    
+            </div><!-- /admin-content -->
+
+            <div style="display:none;" id="comisiones-page" class="admin-content virtual-page">
+
+                <a class="back" @click="virtualNav" href="/bienvenido"><i class="icon-arrow"></i> Comisiones {{ virtualSlug.toUpperCase() }}</a>
+      
+                <div class="filters">
+
+                  <div class="select-filter">
+                    <label>Tipo de Solicitud</label>
+                    <select class="filter-tipo-solicitud" @change="filterTipoSolicitud">
+                      <option value="todos">Todos</option>
+                      <option value="urgente">Urgente</option>
+                      <option value="extemporanea">Extemporánea</option>
+                      <option value="atiempo">A Tiempo</option>
+                    </select>
+                  </div>
+      
+                  <div v-if="populatedUser.isDirector" class="select-filter">
+                    <label>Gerencia</label>
+                    <select class="filter-gerencia" @change="filterGerencia">
+                      <option v-for="gerencia in listaGerencias" :value="gerencia.valor.toLowerCase()">{{ gerencia.valor }}</option>
+                    </select>
+      
+                  </div>
+      
+                  <div class="select-filter">
+                    <label>Tipo de viaje</label>
+                    <select class="filter-tipo" @change="filterTipo">
+                      <option value="false" selected="selected">Todos</option>
+                      <option value="nacional">Nacional</option>
+                      <option value="internacional">Internacional</option>
+                    </select>
+                  </div>
+      
+                </div>
+                
+                <div class="comisiones-list">
+      
+                  <div v-for="(comision, index) in comisionesNuevas" :key="'comisionNueva-' + index" :class="[comision.tipoDestino == 'nacional' && 'nacional', comision.urgente && 'urgente', comision.extemporanea && 'extemporanea', !comision.urgente && !comision.extemporanea && 'atiempo']" class="comision list-item">
+      
+                    <div>
+                      <h3 class="capitalize">{{ comision.nombres }}</h3>
+                      <p>Nombre</p>
+                      <i @click="moreInfo" class="icon-eye trigger-more-info"></i>
+                    </div>
+      
+                    <div>
+                      <h3>{{ comision.ciudad }}</h3>
+                      <p>Destino</p>
+                    </div>
+      
+                    <div>
+                      <h3>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) ) }}</h3>
+                      <p>Días de Comisión</p>
+                    </div>
+      
+                    <div>
+                      <h3 class="overflow-text">{{ comision.objeto }}</h3>
+                      <p>Objetivo de Comisión</p>
+                    </div>
+      
+                    <div>
+      
+                      <div v-if="comision.urgente">
+                        <span class="color-ind urgente"></span>
+                        <p>Solicitud Urgente</p>
+                      </div>
+      
+                      <div v-else>
+                        <div v-if="comision.extemporanea">
+                          <span class="color-ind extra"></span>
+                          <p>Solicitud Extemporánea</p>
+                        </div>
+                        <div v-else>
+                          <span class="color-ind atiempo"></span>
+                          <p>Solicitud a Tiempo</p>
+                        </div>
+                      </div>
+      
+                    </div>
+      
+                    <div class="cancel-row btt-row">
+                      <button title="rechazar" @click="updateComision" :data-id="comision.id" data-action="rechazado" class="cancel"><i class="icon-close"></i></button>
+                    </div>
+      
+                    <div class="btt-row end-row">
+                      <button title="aprobar" @click="updateComision" :data-id="comision.id" data-action="aprobado" class="check"><i class="icon-check"></i></button>
+                    </div>
+
+                    <div class="more-info">
+
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Nombre</div>
+                          <div class="capitalize">{{ comision.nombres }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Destino</div>
+                          <div>{{ comision.ciudad }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Fecha Inicial</div>
+                          <div><js-timestamp format="calendar" :at="comision.fechaInicial"></div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Fecha Final</div>
+                          <div><js-timestamp format="calendar" :at="comision.fechaFinal"></div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Días de Comisión</div>
+                          <div>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) ) }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Departamento</div>
+                          <div>{{ comision.departamento }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Gerencia</div>
+                          <div>{{ comision.gerencia }}</div>
+                        </div>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Objetivo Comisión</h3>
+  
+                        <p class="objeto-comision">{{ comision.objeto }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Impacto Comisión</h3>
+  
+                        <p class="objeto-comision">{{ comision.impactoComision }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Observaciones</h3>
+  
+                        <p class="objeto-comision">{{ comision.observaciones }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Entidad</div>
+                          <div class="capitalize">{{ comision.entidad }}</div>
+                        </div>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Tipo de Comisión</div>
+                          <div class="capitalize">{{ comision.tipoComision }}</div>
+                        </div>
+  
+                      </div>
+  
+                    </div>
+      
+                  </div>
+      
+                </div>
+      
+             </div><!-- /admin-content -->
+
+             <div style="display:none;" id="usuarios-page" class="admin-content virtual-page">
+        
+                <a class="back" href="/beneficio"><i class="icon-arrow"></i> Lista de usuarios</a>
+      
+                <div class="filters">
+
+                  <div class="select-filter">
+                    <label>Filtrar por gerencia</label>
+                    <select class="filter-gerencia" @change="filterGerenciaUsuarios">
+                      <option value="todos">Todas</option>
+                      <option v-for="gerencia in listaGerencias" :value="gerencia.valor.toLowerCase()">{{ gerencia.valor }}</option>
+                    </select>
+                  </div>
+
+                  <div class="input-filter">
+                    <label>Filtrar por nombre</label>
+                    <input @input="filterByName" class="filter-name" type="text" />
+                  </div>
+
+                  <a class="add-user-btn" href="/nuevo-usuario"><i class="icon-plus"></i> Agregar usuario</a>
+
+                </div>
+
+                <div class="users-list">
+ 
+                  <div v-for="(user, index) in userList" :data-index="index" :data-id="user.id" :key="'usuario-' + index" :class="[user.gerencia.toLowerCase(), listRendered && 'show']" class="user-item comision list-item">
+      
+                    <div>
+                      <h3 class="nombre-usuario" class="capitalize">{{ user.fullName.toLowerCase() }}</h3>
+                      <p>Nombre</p>
+                    </div>
+      
+                    <div>
+                      <h3 :title="user.emailAddress" class="overflow-text">{{ user.emailAddress.toLowerCase() }}</h3>
+                      <p>Email</p>
+                    </div>
+      
+                    <div>
+                      <select @change="updateUser" class="user-gerencia" v-model="user.gerencia">
+                        <option v-for="gerencia in listaGerencias" :value="gerencia.valor">{{ gerencia.valor }}</option>
+                      </select>
+                      <p>Gerencia</p>
+                    </div>
+      
+                    <div>
+                      <h3>{{ user.departamento }}</h3>
+                      <p>Departamento</p>
+                    </div>
+
+                    <div>
+                      <h3 v-if="user.owner"><js-timestamp format="calendar" :at="user.owner.lastSeenAt"></js-timestamp></h3>
+                      <h3 v-else> - </h3>
+                      <p>Última conexión</p>
+                    </div>
+      
+                    <div class="center check-inside">
+      
+                        <div v-if="user.owner">
+                          <div class="slideOne">
+                            <input @change="updateUser" :checked="user.owner.isGerente ? 'checked': ''" type="checkbox" value="true" :id="'gerente-check-' + index" name="gerente-check" />
+                            <label :for="'gerente-check-' + index"></label>
+                          </div>
+                          <p>Gerente</p>
+                        </div>
+
+                        <div v-else>
+                          <div class="slideOne">
+                            <input @change="updateUser" :checked="user.isGerente ? 'checked': ''" type="checkbox" value="true" :id="'gerente-check-' + index" name="gerente-check" />
+                            <label :for="'gerente-check-' + index"></label>
+                          </div>
+                          <p>Gerente</p>
+                        </div>
+
+                    </div>
+
+                    <div class="center check-inside">
+      
+                        <div v-if="user.owner">
+                          <div class="slideOne">
+                            <input @change="updateUser" :checked="user.owner.isDirector ? 'checked': ''" type="checkbox" value="true" :id="'director-check-' + index" name="director-check" />
+                            <label :for="'director-check-' + index"></label>
+                          </div>
+                          <p>Director</p>
+                        </div>
+
+                        <div v-else>
+                          <div class="slideOne">
+                            <input @change="updateUser" :checked="user.isDirector ? 'checked': ''" type="checkbox" value="true" :id="'director-check-' + index" name="director-check" />
+                            <label :for="'director-check-' + index"></label>
+                          </div>
+                          <p>Director</p>
+                        </div>
+      
+                    </div>
+      
+                  </div>
+
+                </div>
+              
+              </div>
+
+          </div><!-- /vpages-wrapper -->
+
+        <router-view></router-view>
+
+   </div><!-- /end-col-->
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

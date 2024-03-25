@@ -1,0 +1,548 @@
+<div class="outter-wrapper even-cols" id="editar-beneficio">
+
+   <div class="start-col">
+       
+      <div class="progreso">
+
+         <div class="titulo">
+            <img src="/images/ecopetrol-icon.png" />
+            <h1>Beneficios Tributarios</h1>
+         </div>
+
+         <div v-if="contenidoCompletado.length">
+
+            <h2 class="set-title">Contenido Completado</h2>
+
+            <div class="checklist completado">
+
+               <div @click="editContenido" class="check-row" v-for="item in contenidoCompletado">
+
+                  <div class="check">
+
+                     <i class="icon-check"></i>
+
+                  </div>
+
+                  <h2>{{ item.nombre }}</h2>
+
+               </div>
+
+            </div>
+
+         </div>
+
+         <div v-if="contenidoProgreso.length">
+
+            <h2 class="set-title">Contenido en Progreso</h2>
+
+            <div class="checklist en-progreso">
+
+               <div class="check-row" v-for="item in contenidoProgreso">
+
+                  <div class="check">
+
+                     <i class="icon-check"></i>
+
+                  </div>
+
+                  <h2>{{ item.nombre }}</h2>
+
+               </div>
+
+            </div>
+
+         </div>
+
+         <div v-if="contenidoPendiente.length">
+
+            <h2 class="set-title">Contenido Pendiente</h2>
+
+            <div class="checklist">
+
+               <div class="check-row" v-for="item in contenidoPendiente">
+
+                  <div class="check">
+
+                     <i class="icon-check"></i>
+
+                  </div>
+
+                  <h2>{{ item.nombre }}</h2>
+
+               </div>
+
+            </div>
+
+         </div>
+
+         <a class="gray-btn" :href="'/beneficio/' + beneficio.id">Ver Contenido Completado <i class="icon-arrow-next"></i></a>
+
+      </div><!-- /progreso -->
+  
+   </div>
+ 
+   <div class="end-col">
+ 
+      <div class="main-content beneficio-single editar-beneficio" v-cloak>
+
+         <div class="container">
+
+            <div v-if="beneficio">
+ 
+               <h1>{{ beneficio.titulo }}</h1>
+
+               <ajax-form class="step-forms" action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+               
+                  <div v-if="contenidoProgreso[0].nombre == 'Objetivo General'" class="step-1">
+
+                     <h3>Objetivo general</h3>
+
+                     <textarea required v-model="formData.objetivoGeneral" ></textarea>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Objetivos Específicos'" class="step-2">
+
+                     <h3>Objetivos Específicos</h3>
+
+                     <textarea required v-model="formData.objetivosEspecificos" ></textarea>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Tipología del proyecto'" class="step-3">
+
+                     <h3>Tipología del proyecto</h3>
+
+                     <div class="input-wrapper">
+
+                        <p>Se debe clasificar el tipo de proyecto de carácter de investigación científica que se presenta, de acuerdo con estas opciones:</p>
+
+                        <div class="radio-list">
+
+                           <div>
+
+                              <label class="radio-style">Investigación científica <a class="image-link" href="/images/investigacion-cientifica.jpg"><i class="icon-information-outline"></i></a>
+                                 <input required type="radio" value="Investigación científica" name="tipologia" v-model="formData.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Investigación científica'" class="radio-style child">Investigación básica 
+                                 <input required type="radio" value="Investigación básica" name="investigacion" v-model="formData.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Investigación científica'" class="radio-style child">Investigación básica dirigida
+                                 <input required type="radio" value="Investigación básica dirigida" name="investigacion" v-model="formData.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Investigación científica'" class="radio-style child">Investigación aplicada
+                                 <input required type="radio" value="Investigación aplicada" name="investigacion" v-model="formData.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                           <div>
+
+                              <label class="radio-style">Desarrollo tecnológico <a class="image-link" href="/images/desarrollo.jpg"><i class="icon-information-outline"></i></a>
+                                 <input required type="radio" value="Desarrollo tecnológico" name="tipologia" v-model="formData.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Desarrollo tecnológico'" class="radio-style child">Desarrollo Tecnológico  
+                                 <input required type="radio" value="Desarrollo Tecnológico" name="desarrollo" v-model="formData.desarrollo" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Desarrollo tecnológico'" class="radio-style child">Desarrollo experimental 
+                                 <input required type="radio" value="Desarrollo experimental" name="desarrollo" v-model="formData.desarrollo" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                           <div>
+
+                              <label class="radio-style">Innovación tecnológica <a class="image-link" href="/images/innovacion.jpg"><i class="icon-information-outline"></i></a>
+                                 <input required type="radio" value="Innovación tecnológica" name="tipologia" v-model="formData.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Innovación tecnológica'" class="radio-style child">Productos ( Bienes o servicios)   
+                                 <input required type="radio" value="Productos" name="innovacion" v-model="formData.innovacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="formData.tipologia == 'Innovación tecnológica'" class="radio-style child">Proceso ( Productivo o presentación de servicios )
+                                 <input required type="radio" value="Proceso" name="innovacion" v-model="formData.innovacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-show="contenidoProgreso[0].nombre == 'Líder del Proyecto'" class="step-4">
+
+                     <h3>Líder del Proyecto</h3>
+
+                     <div class="input-wrapper">
+
+                        <p>Funcionario de ECP que será registrado como investigador principal</p>
+
+                        <input type="text" class="autocomplete-nombre" v-model="formData.lider" />
+
+                     </div>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Valor Vigencias'" class="step-5">
+
+                     <h3>Valor Vigencias</h3>
+
+                     <div class="input-wrapper">
+
+                        <p>(El proyecto a postular debe tener aprobado en el comité que corresponda)</p>
+
+                        <div v-for="(vigencia, index) in formData.valorVigencias" class="vigencia row" >
+
+                           <div class="col-30">
+
+                              <label>Año</label>
+
+                              <select v-model="vigencia[0]" required >
+                                 <option value="2021">2021</option>
+                                 <option value="2020">2022</option>
+                                 <option value="2019">2023</option>
+                                 <option value="2018">2024</option>
+                                 <option value="2017">2025</option>
+                                 <option value="2016">2026</option>
+                                 <option value="2015">2027</option>
+                                 <option value="2014">2028</option>
+                                 <option value="2013">2029</option>
+                                 <option value="2012">2030</option>
+                                 <option value="2011">2031</option>
+                                 <option value="2010">2032</option>
+                                 <option value="2009">2033</option>
+                                 <option value="2009">2034</option>
+                                 <option value="2009">2035</option>
+                              </select>
+
+                           </div>
+
+                           <div class="col-70">
+
+                              <label>Presupuesto en pesos colombianos COP</label>
+
+                              <input type="text" @input="formatVigencia" :data-index="index" v-model="vigencia[1]" required />
+
+                           </div>
+
+                        </div>
+
+                        <a href="#" @click="agregarVigencia" class="primary-btn" ><i class="icon-plus"></i> Agregar vigencia</a>
+
+                     </div>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Revisión Autoridad Técnica'" class="step-6">
+
+                     <h3>Revisión por Autoridad Técnica</h3>
+
+                     <div class="input-wrapper">
+
+                        <p v-if="beneficio.estado == 'funcionario asignado'">El contenido previamente completado debe ser aprobado por la autoridad técnica para continuar el proceso.</p>
+
+                        <p v-else-if="beneficio.estado == 'pendiente observaciones gerencia'">Las siguientes observaciones deben ser revisadas para continuar con el proceso:</p>
+
+                        <div v-else-if="beneficio.aprobadoGerencia">
+                           
+                           <p>Aprobado por autoridad técnica</p>
+
+                           <div class="buttons">
+
+                              <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+      
+                              <a @click="updateProgress" href="#" class="primary-btn">CONTINUAR</a>
+      
+                           </div>
+
+                        </div>
+
+                        <p v-else>Contenido enviado a revisión de la autoridad técnica, pendiente de aprobación.</p>
+
+                        <div v-if="beneficio.observaciones && beneficio.estado == 'pendiente observaciones gerencia'">
+
+                           <h4>Observaciones:</h4>
+
+                           <p>{{ beneficio.observaciones }}</p>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="beneficio.estado == 'funcionario asignado' || beneficio.estado == 'pendiente observaciones gerencia'" class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">ENVIAR A REVISIÓN</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Revisión Comité'" class="step-7">
+
+                     <h3>Revisión Comité</h3>
+
+                     <div class="input-wrapper">
+
+                        <p v-if="beneficio.estado == 'pendiente de aprobación comité'">El contenido previamente completado debe ser aprobado por el comité para continuar el proceso.</p>
+
+                        <p v-else-if="beneficio.estado == 'pendiente observaciones comité'">Las siguientes observaciones deben ser revisadas para continuar con el proceso:</p>
+
+                        <div v-else-if="beneficio.aprobadoComite">
+                           
+                           <p>Aprobado por comité</p>
+
+                           <div class="buttons">
+
+                              <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+      
+                              <a @click="updateProgress" href="#" class="primary-btn">CONTINUAR</a>
+      
+                           </div>
+
+                        </div>
+
+                        <p v-else>Contenido enviado a revisión del comité, pendiente de aprobación.</p>
+
+                        <div v-if="beneficio.observaciones && beneficio.estado == 'pendiente observaciones comité'">
+
+                           <h4>Observaciones:</h4>
+
+                           <p>{{ beneficio.observaciones }}</p>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="beneficio.estado == 'pendiente observaciones comité'" class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">ENVIAR A REVISIÓN</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].campo == 'archivoUno'" class="step-8">
+
+                     <h3>TI-F 027 Formato Guía para <br />
+                        Postular Proyectos  a Obtener Beneficios</h3>
+
+                     <div class="input-wrapper file-wrapper">
+
+                        <a target="_blank" href="/TI-F-027_Formato-para-postular-proyectos-para-acceder-a-beneficios-tributarios-2021-V3.docx"><i class="icon-attach"></i> Descargar formato guía</a><br />
+                        <br />
+
+                        <p>Seleccione archivo en Word de Formato Guía</p>
+
+                        <input @click="fakeUpload" type="text" id="archivoUno" readonly placeholder="Adjuntar archivo de TI-F 027 Formato Guía" required />
+
+                        <p v-if="formErrors.archivoUno" class="error">{{ formErrors.archivoUno }}</p>
+
+                        <div v-if="beneficio.archivoUno.length" v-for="version in beneficio.archivoUno" class="vista-previa">
+
+                           <div>
+
+                              <div>
+
+                                 <img src="/images/doc.png" />
+
+                              </div>
+
+                              <div>
+
+                                 <h4>{{ version.fileName }}</h4>
+                                 <p>{{ fechaFromNow( version.date ) }}</p>
+
+                              </div>
+
+                           </div>
+
+                           <div class="descargar">
+
+                             <a target="_blank" :href="'/files/' + version.ruta">Descargar <i class="icon-download"></i></a>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].campo == 'archivoDos'" class="step-9">
+
+                     <h3>TI-F 028 Formato Guía para Presupuesto del Proyecto a Obtener Beneficios Tributarios</h3>
+
+                     <div class="input-wrapper file-wrapper">
+
+                        <a target="_blank" href="/T&I-F-028_Formato-Guia-para-Diligenciar-el-Presupuesto-del-Proyecto-a-Obtener-Beneficios-Tributarios.xlsx"><i class="icon-attach"></i> Descargar formato guía</a><br />
+                        <br />
+
+                        <p>Seleccione archivo en Excel de Formato Guía</p>
+
+                        <input @click="fakeUpload" type="text" id="archivoDos" readonly placeholder="Adjuntar archivo de TI-F 028 Formato Guía" required />
+
+                        <p v-if="formErrors.archivoDos" class="error">{{ formErrors.archivoDos }}</p>
+
+                        <div v-if="beneficio.archivoDos.length" v-for="version in beneficio.archivoDos" class="vista-previa">
+
+                           <div>
+
+                              <div>
+
+                                 <img src="/images/doc.png" />
+
+                              </div>
+
+                              <div>
+
+                                 <h4>{{ version.fileName }}</h4>
+                                 <p>{{ fechaFromNow( version.date ) }}</p>
+
+                              </div>
+
+                           </div>
+
+                           <div class="descargar">
+
+                             <a target="_blank" :href="'/files/' + version.ruta">Descargar <i class="icon-download"></i></a>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <div class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">GUARDAR Y CONTINUAR</ajax-button>
+
+                     </div>
+
+                  </div>
+
+                  <div v-if="contenidoProgreso[0].nombre == 'Aprobación final'" class="step-10">
+
+                     <h3>Aprobación final</h3>
+
+                     <div class="input-wrapper">
+
+                        <p v-if="beneficio.estado == 'pendiente adjuntar formatos'">Los formatos previamente adjuntos deben ser aprobados por administración para finalizar el proceso.</p>
+
+                        <p v-else-if="beneficio.estado == 'pendiente observaciones finales'">Las siguientes observaciones deben ser revisadas para continuar con el proceso:</p>
+
+                        <p v-else-if="beneficio.aprobadoFinal">Proyecto aprobado</p>
+
+                        <p v-else>Contenido enviado a revisión de administración, pendiente de aprobación final.</p>
+
+                        <div v-if="beneficio.observaciones && beneficio.estado == 'pendiente observaciones finales'">
+
+                           <h4>Observaciones:</h4>
+
+                           <p>{{ beneficio.observaciones }}</p>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="beneficio.estado == 'pendiente adjuntar formatos' || beneficio.estado == 'pendiente observaciones finales'" class="buttons">
+
+                        <a class="cancelar" :href="'/beneficio/' + beneficio.id">CANCELAR</a>
+
+                        <ajax-button type="submit" :syncing="syncing" class="primary-btn">ENVIAR A REVISIÓN</ajax-button>
+
+                     </div>
+
+                  </div>
+
+               </ajax-form>
+
+               <br /><br />
+               
+               <form @submit="submitFile" id="file-form" action="/file/upload" enctype="multipart/form-data" method="post">
+                  <input @change="fileChange" type="file" id="input-file" name="avatar" ><br>
+               </form>
+
+            </div>
+
+         </div>
+ 
+      </div>
+ 
+   </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

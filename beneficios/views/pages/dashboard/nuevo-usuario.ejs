@@ -1,0 +1,64 @@
+<div class="outter-wrapper even-cols" id="nuevo-usuario">
+
+    <div class="start-col">
+
+      <%- partial('../../partials/beneficios-sidebar.ejs') %>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+         <div class="container">
+ 
+          <ajax-form class="default-form newuser-form" action="crearUsuario" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+               <h2>Agregar Usuario</h2>
+              
+              <div class="form-step active">
+                 <div class="form-group">
+                     <label>Número de registro</label>
+                     <input type="text" v-model="formData.registro"  />
+                     <p v-if="formErrors.registro" class="error">Debes escribir un número de registro</p>
+                  </div>
+
+                 <div class="form-group">
+                     <label>Nombre completo</label>
+                     <input type="text" v-model="formData.fullName"  />
+                     <p v-if="formErrors.fullName" class="error">Debes escribir el nombre completo</p>
+                  </div>
+
+                 <div class="form-group">
+                     <label>Correo electrónico</label>
+                     <input type="email" v-model="formData.emailAddress"  />
+                     <p v-if="formErrors.emailAddress" class="error">Debes escribir una cuenta de correo electrónico</p>
+                  </div>
+
+                  <div class="form-group">
+                     <label>Gerencia</label>
+                     <input type="text" v-model="formData.gerencia"  />
+                     <p v-if="formErrors.gerencia" class="error">Debes escribir la gerencia</p>
+                  </div>
+
+                  <div class="form-group">
+                     <label>Departamento</label>
+                     <input type="text" v-model="formData.departamento"  />
+                     <p v-if="formErrors.departamento" class="error">Debes escribir el departamento</p>
+                  </div>
+              </div><!-- /form-step -->
+
+              <div class="form-group btt-wrapper">
+                  <ajax-button id="submitComision" type="submit" :syncing="syncing" class="btn-block primary-btn enviar-btn">CREAR BENEFICIO TRIBUTARIO </ajax-button>
+             </div>
+
+          </ajax-form>
+        </div>
+ 
+       </div>
+ 
+    </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

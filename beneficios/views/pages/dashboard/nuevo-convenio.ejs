@@ -1,0 +1,66 @@
+<div class="outter-wrapper even-cols" id="nuevo-convenio">
+
+    <div class="start-col">
+
+        <div class="side-header">
+  
+         <div class="titulo">
+            <img src="/images/ecopetrol-icon.png" />
+            <h1>Beneficios Tributarios</h1>
+         </div>
+
+         <div class="illustration">
+           <img src="/images/title.svg" />
+
+           <img src="images/concept.png"
+                  srcset="images/concept@2x.png 2x,
+                  images/concept@3x.png 3x"
+                  class="concept">
+         </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+         <div class="container">
+ 
+          <ajax-form class="default-form" action="crearConvenio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+               <h3>Bienvenido,</h3>
+               <h2>A continuación adjunta <br />
+                  el documento del convenio, completado previamente.</h2>
+              
+              <div class="form-step active">
+                 <div class="form-group">
+                   <label>Nombre del convenio</label>
+                   <input type="text" maxlength="300" class="capitalize" v-model="formData.titulo"  />
+                   <p v-if="formErrors.titulo" class="error">Debes escribir un nombre de convenio</p>
+                 </div>
+
+                 <div class="form-group attach-wrapper">
+                  <label>Archivo del convenio</label>
+                  <input @click="fakeUpload" placeholder="Adjuntar archivo de convenio" readonly class="file-name" type="text" maxlength="300" class="capitalize"  />
+                  <input @change="uploadChange" id="uploadExcel" type=file  name="files[]">
+                  <p v-if="formErrors.excel" class="error">Debes seleccionar un archivo</p>
+                  <div class="errores-campos"></div>
+                </div>
+              </div><!-- /form-step -->
+
+              <div class="form-group btt-wrapper">
+                  <ajax-button id="submitComision" type="submit" :syncing="syncing" class="btn-block primary-btn enviar-btn">CONTINUAR</ajax-button>
+             </div>
+
+          </ajax-form>
+        </div>
+ 
+       </div>
+ 
+    </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

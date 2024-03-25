@@ -1,0 +1,41 @@
+<div class="outter-wrapper even-cols" id="nuevo-beneficio">
+
+    <div class="start-col">
+
+      <%- partial('../../partials/beneficios-sidebar.ejs') %>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+         <div class="container">
+ 
+          <ajax-form class="default-form newben-form" action="crearBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+               <h2>Título de Nuevo<br /> 
+                   Proyecto de Beneficio Tributario</h2>
+              
+              <div class="form-step active">
+                 <div class="form-group">
+                   <label>El título es la primera referencia del proyecto, debe describir el tema y el trabajo a realizar, para ello es importante tener en cuenta el contenido de la propuesta y la finalidad con que se realiza el trabajo de investigación. Se recomienda utilizar un máximo de 250 caracteres para el título.</label>
+                   <input placeholder="título del proyecto" type="text" maxlength="300" v-model="formData.titulo"  />
+                   <p v-if="formErrors.titulo" class="error">Debes escribir un título</p>
+                 </div>
+              </div><!-- /form-step -->
+
+              <div class="form-group btt-wrapper">
+                  <ajax-button id="submitComision" type="submit" :syncing="syncing" class="btn-block primary-btn enviar-btn">Postular proyecto para beneficio tributario </ajax-button>
+             </div>
+
+          </ajax-form>
+        </div>
+ 
+       </div>
+ 
+    </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

@@ -1,0 +1,183 @@
+<div class="outter-wrapper even-cols" id="dashboard">
+
+   <div class="start-col">
+
+     <%- partial('../../partials/beneficios-sidebar.ejs') %>
+ 
+    </div>
+
+  <div class="end-col">
+
+     <div class="main-content" v-cloak>
+
+        <div class="container">
+
+           <a class="dash-btn active" href="/dashboard"><i class="icon-dashboard"></i> Dashboard</a>
+
+           <div class="dash-box">
+
+               <div class="row">
+
+                  <div class="col-50">
+
+                     <h3>Proyectos activos</h3>
+
+                     <div class="convenciones">
+
+                        <div>
+
+                           <span class="bullet"></span> Investigación Cientifica 
+
+                        </div>
+
+                        <div>
+
+                           <span class="bullet"></span> Desarrollo Tecnologico
+
+                        </div>
+
+                        <div>
+
+                           <span class="bullet"></span> Innovación Tecnologica 
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+                  <div class="col-50">
+
+                     <div class="graph-wrapper">
+
+                        <div class="stream-chart ct-chart ct-perfect-fourth"></div>
+
+                        <div class="avance-label">
+
+                           <h3><span class="count"> {{ series[0] + series[1] + series[2] }} </span></h3>
+                           <p>TOTAL</p>
+
+                        </div>
+
+                        <div class="percent-labels">
+
+                           <span>0</span>
+                           <span>100</span>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+               </div>
+
+            </div><!-- /dash-box-->
+
+            <div class="row">
+
+               <div class="col-50">
+
+                  <div class="dash-box simple">
+                     
+                     <h3>Investigación Científica</h3>
+
+                     <div class="graph-wrapper">
+
+                        <div class="one-chart ct-chart ct-perfect-fourth"></div>
+
+                        <div class="avance-label">
+
+                           <h3><span class="count">{{ series[0] }}</span></h3>
+                           <p>TOTAL</p>
+
+                        </div>
+
+                        <div class="percent-labels">
+
+                           <span>0</span>
+                           <span>100</span>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+               </div>
+
+               <div class="col-50">
+
+                  <div class="dash-box simple">
+                     
+                     <h3>Desarrollo Tecnológico</h3>
+
+                     <div class="graph-wrapper">
+
+                        <div class="two-chart ct-chart ct-perfect-fourth"></div>
+
+                        <div class="avance-label">
+
+                           <h3><span class="count">{{ series[1] }}</span></h3>
+                           <p>TOTAL</p>
+
+                        </div>
+
+                        <div class="percent-labels">
+
+                           <span>0</span>
+                           <span>100</span>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+               </div>
+
+            </div>
+
+            <div class="row">
+
+               <div class="col-50">
+
+                  <div class="dash-box simple">
+                     
+                     <h3>Innovación Tecnologica</h3>
+
+                     <div class="graph-wrapper">
+
+                        <div class="three-chart ct-chart ct-perfect-fourth"></div>
+
+                        <div class="avance-label">
+
+                           <h3><span class="count">{{ series[2] }}</span></h3>
+                           <p>TOTAL</p>
+
+                        </div>
+
+                        <div class="percent-labels">
+
+                           <span>0</span>
+                           <span>100</span>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+               </div>
+
+            </div>
+
+        </div>
+
+     </div>
+
+  </div>
+
+</div>
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

@@ -1,0 +1,1364 @@
+<div class="outter-wrapper convenios-wrapper" id="convenio-single">
+
+    <div class="start-col">
+
+        <div class="side-header">
+
+            <div>
+  
+               <div class="titulo">
+                  <img src="/images/ecopetrol-icon.png" />
+                  <h1>Gestión de Convenios</h1>
+               </div>
+
+               <div class="side-menu">
+
+                  <ul>
+                     <li @click="openList" class="mis-convenios list-wrapper">
+                        <div class="top-part">
+                           <i class="icon-grid"></i>
+                           <span v-if="me.isSuperAdmin">Convenios</span>
+                           <span v-else>Mis Convenios</span>
+                        </div>
+
+                        <div class="titles list-child">
+                           <a v-for="(convenio, index) in convenios" :href="'/convenio/' + convenio.id">{{ convenio.titulo }}</a>
+                        </div>
+                     </li>
+                  </ul>
+
+                  <a v-if="!me.isSuperAdmin" href="/nuevo-convenio" class="more">
+                     <div class="plus-wrapper"><i class="icon-plus"></i></div>
+                     <span>Añadir Convenio</span>
+                  </a>
+
+               </div>
+
+            </div>
+  
+           <div class="cerrar">
+             
+               <a href="/logout">
+                  <div class="wrapper-icon"><i class="icon-logout"></i></div>
+                  <span>Cerrar Sesión</span>
+               </a>
+
+           </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+
+      <div @click="toggleSidebar" class="wiggle">
+         <i class="icon-arrow_back_ios"></i>
+      </div>
+ 
+       <div class="main-content" v-cloak>
+
+         <div class="page-title">
+            <a href="/mis-convenios" class="back-text"><i class="icon-arrow_back"></i></a>  
+            <span>{{ convenio.titulo }}</span>
+         </div>
+
+         <div class="container">
+ 
+            <nav>
+               <ul @click="multiformNav">
+                  <li class="active">Información General</li>
+                  <li>Áreas</li>
+                  <li>Financiero</li>
+                  <li>Roles y Responsables</li>
+                  <li>Plazos del Convenio</li>
+                  <li>Propiedad Intelectual</li>
+               </ul>
+            </nav>
+
+            <div class="multiform-wrapper conform">
+
+               <div class="multiform-page active">
+
+                  <div class="tabs-wrapper">
+
+                     <div class="tabs-header">
+
+                        <div @click="tabClick" class="active tabs-nav"><span class="number">1</span> Información de Convenio</div>
+
+                        <div @click="tabClick" class="tabs-nav"><span class="number">2</span> Información de Aliado</div>
+
+                     </div>
+
+                     <div class="tabs-content">
+
+                        <div class="active">
+                           
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Número de Convenio</label>
+
+                                 <input readonly v-model="convenio.campos['Número del Convenio']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Número de Acuerdo Cooperación</label>
+
+                                 <input readonly v-model="convenio.campos['Número Acuerdo Cooperación']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Estado de Convenio</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Estado del Convenio']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Tipo de Convenio</label>
+
+                                 <input readonly v-model="convenio.campos['Tipo de Convenio']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Regional</label>
+
+                                 <input readonly v-model="convenio.campos['Regional']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Naturaleza del Convenio</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Naturaleza del Convenio']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-100">
+
+                                 <label>Objeto</label>
+
+                                 <textarea v-model="convenio.campos['Objeto']"></textarea>
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                        </div><!-- /tab -->
+
+                        <div>
+                           
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Temática I</label>
+
+                                 <input readonly v-model="convenio.campos['Temática I']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Sub-temática I</label>
+
+                                 <input readonly v-model="convenio.campos['Sub-temática I']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Temática II</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Temática II']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-66">
+
+                                 <label>Aliados</label>
+
+                                 <input readonly v-model="convenio.campos['ALIADOS']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Número de Acta de Comité</label>
+
+                                 <input readonly v-model="convenio.campos['Número de Acta de Comité']" type="text"  />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>No. de Suspensiones</label>
+
+                                 <input readonly v-model="convenio.campos['No. de Suspensiones']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>No. de Mod. del Conv.</label>
+
+                                 <input readonly v-model="convenio.campos['No. de Mod. del Conv.']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>No. de Otrosíes del Conv.</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['No. de Otrosíes del Conv.']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-50">
+
+                                 <label>¿Conv. con acción Judicial?</label>
+
+                                 <div class="radio-wrapper">
+
+                                    <label>Acción Judicial</label>
+
+                                    <div>
+
+                                       <label class="radio-style">Si
+                                          <input type="radio" value="si" name="accion-judicial" v-model="convenio.campos['¿Conv. con acción Judicial?']">
+                                          <span class="fakeradio"></span>
+                                        </label>
+
+                                       <label class="radio-style">No
+                                          <input type="radio" value="no" name="accion-judicial" v-model="convenio.campos['¿Conv. con acción Judicial?']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                              <div class="col-50">
+
+                                 <label>¿Requiere Interventoría?</label>
+
+                                 <div class="radio-wrapper">
+
+                                    <label>Interventoría</label>
+
+                                    <div>
+
+                                       <label class="radio-style">Si
+                                          <input type="radio" value="si" name="interventoria" v-model="convenio.campos['¿Requiere Interventoría?']">
+                                          <span class="fakeradio"></span>
+                                        </label>
+
+                                       <label class="radio-style">No
+                                          <input type="radio" value="no" name="interventoria" v-model="convenio.campos['¿Requiere Interventoría?']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>NIT</label>
+
+                                 <input readonly v-model="convenio.campos['NIT']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Identificación</label>
+
+                                 <input readonly v-model="convenio.campos['Identificación']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Representante Legal</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Representante Legal']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Municipio de Ejecución</label>
+
+                                 <input readonly v-model="convenio.campos['Municipio de Ejecución']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Departamento de Ejecución</label>
+
+                                 <input readonly v-model="convenio.campos['Departamento de Ejecución']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>País de Ejecución</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['País de Ejecución']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Porcentaje de Participacion</label>
+
+                                 <input readonly v-model="convenio.campos['Porcentaje de Participacion']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Riesgo</label>
+
+                                 <input readonly v-model="convenio.campos['Riesgo']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Causa</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Causa']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                           <div class="row">
+
+                              <div class="col-33">
+
+                                 <label>Consecuencia</label>
+
+                                 <input readonly v-model="convenio.campos['Consecuencia']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Tratamiento</label>
+
+                                 <input readonly v-model="convenio.campos['Tratamiento']" type="text"  />
+
+                              </div>
+
+                              <div class="col-33">
+
+                                 <label>Estado</label>
+
+                                 <input readonly type="text" v-model="convenio.campos['Estado']" />
+
+                              </div>
+
+                           </div><!-- /row -->
+
+                        </div><!-- /tab -->
+
+                     </div><!-- /tabs-content -->
+                     
+                  </div><!-- /tabs-wrapper -->
+
+               </div><!-- /multiform-page -->
+
+               <div class="multiform-page">
+
+                  <div class="row">
+
+                     <div class="col-100">
+
+                        <div class="wide-input">
+
+                           <label>Área Nivel 1</label>
+
+                           <input type="text" readonly v-model="convenio.campos['Area Nivel 1']" />
+
+                        </div>
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-100">
+
+                        <div class="wide-input">
+
+                           <label>Área Nivel 2</label>
+
+                           <input type="text" readonly v-model="convenio.campos['Area Nivel 2']" />
+
+                        </div>
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-100">
+
+                        <div class="wide-input">
+
+                           <label>Área Nivel 3</label>
+
+                           <input type="text" readonly v-model="convenio.campos['Area Nivel 3']" />
+
+                        </div>
+
+                     </div>
+
+                  </div><!-- /row -->
+
+               </div><!-- /multiform-page -->
+               
+               <div class="multiform-page">
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Moneda del Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Moneda del Convenio']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Valor Inicial del Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Valor Inicial del Convenio']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Valor Actual del Convenio</label>
+
+                        <input readonly type="text" v-model="convenio.campos['Valor Actual del Convenio']" v-money-format />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Total Aportes ECP Especie</label>
+
+                        <input readonly v-model="convenio.campos['Total Aportes ECP Especie']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Total Aportes ECP Dinero</label>
+
+                        <input readonly v-model="convenio.campos['Total Aportes ECP Dinero']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Total Aportes ECOPETROL</label>
+
+                        <input readonly type="text" v-model="convenio.campos['TOTAL APORTES ECOPETROL']" v-money-format />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Total Aportes Aliado Especie</label>
+
+                        <input readonly v-model="convenio.campos['Total Aportes Aliado Especie']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Total Aportes Aliado Dinero</label>
+
+                        <input readonly v-model="convenio.campos['Total Aportes Aliado Dinero']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Total Aportes Aliados</label>
+
+                        <input readonly type="text" v-model="convenio.campos['Total Aportes Aliados']" v-money-format />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Valor de Adicionales Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Valor de Adicionales Convenio']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Valor Desembolsado Ecopetrol</label>
+
+                        <input readonly v-model="convenio.campos['Valor Desembolsado Ecopetrol']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Valor Ejecutado Convenio</label>
+
+                        <input readonly type="text" v-model="convenio.campos['Valor Ejecutado Convenio']" v-money-format />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Instrumento Financiero</label>
+
+                        <input readonly v-model="convenio.campos['Instrumento Financiero']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Saldo Fiducia,Enc.Fiduc,Cuenta</label>
+
+                        <input readonly v-model="convenio.campos['Saldo Fiducia,Enc.Fiduc,Cuenta']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>% Avance Técnico o Ejecución</label>
+
+                        <input readonly type="text" v-model="convenio.campos['% Avance Técnico o Ejecución']" />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Rendimientos Financieros</label>
+
+                        <input readonly v-model="convenio.campos['Rendimientos Financieros']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Valor Reintegros Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Valor Reintegros Convenio']" v-money-format type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>% ECP</label>
+
+                        <input readonly type="text" v-model="convenio.campos['% ECP']" />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>% Aliado</label>
+
+                        <input readonly v-model="convenio.campos['% Aliado']" type="text"  />
+
+                     </div>
+
+                     <div class="col-66">
+
+                        <label>¿El Conv. tiene Pólizas?</label>
+
+                        <div class="radio-wrapper">
+
+                           <label>Polizas del Convenio</label>
+
+                           <div>
+
+                              <label class="radio-style">Si
+                                 <input type="radio" value="si" name="poliza-convenio" v-model="convenio.campos['¿El Conv. tiene Pólizas?']">
+                                 <span class="fakeradio"></span>
+                               </label>
+
+                              <label class="radio-style">No
+                                 <input type="radio" value="no" name="poliza-convenio" v-model="convenio.campos['¿El Conv. tiene Pólizas?']">
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                  </div><!-- /row -->
+
+               </div><!-- /multiform-page -->
+
+               <div class="multiform-page">
+
+                  <div class="row">
+
+                     <div class="col-50">
+
+                        <label>Ejecutores</label>
+
+                        <input readonly v-model="convenio.campos['EJECUTORES']" type="text"  />
+
+                     </div>
+
+                     <div class="col-50">
+
+                        <label>Funcionario Desig. Planeación</label>
+
+                        <input readonly v-model="convenio.campos['Funcionario Desig. Planeación']" type="text"  />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-50">
+
+                        <label>Funcionario Solicitante</label>
+
+                        <input readonly v-model="convenio.campos['Funcionario Solicitante']" type="text"  />
+
+                     </div>
+
+                     <div class="col-50">
+
+                        <label>Funcionario Autorizado</label>
+
+                        <input readonly v-model="convenio.campos['Funcionario Autorizado']" type="text"  />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-50">
+
+                        <label>Administrador del Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Administrador del Convenio']" type="text"  />
+
+                     </div>
+
+                     <div class="col-50">
+
+                        <label>Apoyo Técnico</label>
+
+                        <input readonly v-model="convenio.campos['Apoyo Técnico']" type="text"  />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+               </div><!-- /multiform-page -->
+
+               <div class="multiform-page">
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Plazo de Ejecución (Meses)</label>
+
+                        <input readonly v-model="convenio.campos['Plazo de Ejecución (Meses)']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha de Suscripción de Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Fecha de Suscripción']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha de Inicio de Convenio</label>
+
+                        <input readonly type="text" v-model="convenio.campos['Fecha de Inicio']" />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Fecha de Finalización de Convenio</label>
+
+                        <input readonly v-model="convenio.campos['Fecha de Finalización']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha de Acta de Finalización</label>
+
+                        <input readonly v-model="convenio.campos['Fecha de Acta de Finalización']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha de Cierre Planeada</label>
+
+                        <input readonly type="text" v-model="convenio.campos['Fecha de Cierre Planeada']" />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Fecha de Acta de Cierre</label>
+
+                        <input readonly v-model="convenio.campos['Fecha de Acta de Cierre']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha Inicio Suspensión</label>
+
+                        <input readonly v-model="convenio.campos['Fecha Inicio Suspensión']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>No. de días suspendido</label>
+
+                        <input readonly type="text" v-model="convenio.campos['No. de días suspendido']" />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+                  <div class="row">
+
+                     <div class="col-33">
+
+                        <label>Fecha Inicio de Acción</label>
+
+                        <input readonly v-model="convenio.campos['Fecha Inicio de Acción']" type="text"  />
+
+                     </div>
+
+                     <div class="col-33">
+
+                        <label>Fecha Fin de Acción</label>
+
+                        <input readonly v-model="convenio.campos['Fecha Fin de Acción']" type="text"  />
+
+                     </div>
+
+                  </div><!-- /row -->
+
+               </div><!-- /multiform-page -->
+
+               <div class="multiform-page propiedad-wrapper">
+
+                  <ajax-form action="updateConvenio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+                     <div class="tabs-wrapper">
+
+                        <div class="tabs-header">
+
+                           <div @click="tabClick" class="active tabs-nav"><span class="number">1</span> Información de Propiedad Intelectual</div>
+
+                           <div @click="tabClick" class="tabs-nav"><span class="number">2</span> Información de Aliado</div>
+
+                           <div @click="tabClick" class="tabs-nav"><span class="number">3</span> Información de Aliado</div>
+
+                        </div>
+
+                        <div class="tabs-content">
+
+                           <div class="active">
+                              
+                              <div class="tri-radio-wrapper">
+
+                                 <label>Segmento de Propiedad Intelectual</label>
+
+                                 <div class="radio-row">
+
+                                    <div>
+                                       <label class="radio-style">UP
+                                          <input type="radio" value="UP" name="segmento-propiedad" v-model="convenio.propiedad['Segmento de Propiedad Intelectual']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">MID
+                                          <input type="radio" value="MID" name="segmento-propiedad" v-model="convenio.propiedad['Segmento de Propiedad Intelectual']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">DOWN
+                                          <input type="radio" value="DOWN" name="segmento-propiedad" v-model="convenio.propiedad['Segmento de Propiedad Intelectual']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                              <div class="row multi-campo-row">
+
+                                 <div class="col-50">
+            
+                                    <label>Patente</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Patente']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Patente" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-50">
+            
+                                    <label>Productos Tecnológicos</label>
+
+                                    <div v-for="campo in convenio.propiedad['Productos Tecnológicos']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Productos Tecnológicos" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                              <div class="row">
+
+                                 <div class="col-50">
+            
+                                    <label>Derecho de Autor</label>
+            
+                                    <input v-model="convenio.propiedad['Derecho de Autor']" type="text"  />
+            
+                                 </div>
+            
+                                 <div class="col-50">
+            
+                                    <label>Adquisiciones / Equipo</label>
+            
+                                    <input v-model="convenio.propiedad['Adquisiciones / Equipo']" type="text"  />
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                              <div class="row">
+
+                                 <div class="col-50">
+            
+                                    <label>Laboratorios ICP Involucrados</label>
+            
+                                    <input v-model="convenio.propiedad['Laboratorios ICP Involucrados']" type="text"  />
+            
+                                 </div>
+            
+                                 <div class="col-50">
+            
+                                    <label>Tesis</label>
+
+                                    <select v-model="convenio.propiedad['Tesis']">
+
+                                       <option value="pregrado">Pregrado</option>
+                                       <option value="maestria">Maestría</option>
+                                       <option value="doctorado">Doctorado</option>
+
+                                    </select>
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                              <div class="row">
+
+                                 <div class="col-50">
+            
+                                    <label>Título de Tesis</label>
+            
+                                    <input v-model="convenio.propiedad['Título de Tesis']" type="text"  />
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                           </div>
+
+                           <div>
+                              
+                              <div class="tri-radio-wrapper">
+
+                                 <label>Publicaciones (Artículos- Libros)</label>
+
+                                 <div class="radio-row">
+
+                                    <div>
+                                       <label class="radio-style">Revista
+                                          <input @change="congresoChange" type="radio" value="revista" name="publicaciones" v-model="convenio.propiedad['Publicaciones (Artículos- Libros)']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Congreso
+                                          <input @change="congresoChange" type="radio" value="congreso" name="publicaciones" v-model="convenio.propiedad['Publicaciones (Artículos- Libros)']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Libro
+                                          <input @change="congresoChange" type="radio" value="libro" name="publicaciones" v-model="convenio.propiedad['Publicaciones (Artículos- Libros)']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                 </div>
+
+                                 <div v-if="convenio.propiedad['Publicaciones (Artículos- Libros)'] == 'congreso'" class="sub-radio-row">
+
+                                    <div>
+                                       <label class="radio-style">Simposio
+                                          <input type="radio" value="simposio" name="tipo-congreso" v-model="convenio.propiedad['Tipo Congreso']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Artículo
+                                          <input type="radio" value="articulo" name="tipo-congreso" v-model="convenio.propiedad['Tipo Congreso']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Ponencia
+                                          <input type="radio" value="ponencia" name="tipo-congreso" v-model="convenio.propiedad['Tipo Congreso']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Poster
+                                          <input type="radio" value="poster" name="tipo-congreso" v-model="convenio.propiedad['Tipo Congreso']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                 </div>
+
+                                 <div v-if="convenio.propiedad['Publicaciones (Artículos- Libros)'] == 'congreso'" class="row sub-row">
+
+                                    <div class="col-50">
+               
+                                       <label>Nombre</label>
+               
+                                       <input v-model="convenio.propiedad['Nombre Congreso']" type="text"  />
+               
+                                    </div>
+               
+                                    <div class="col-50">
+               
+                                       <label>Autor</label>
+               
+                                       <input v-model="convenio.propiedad['Autor Congreso']" type="text"  />
+               
+                                    </div>
+               
+                                 </div><!-- /row -->
+
+                              </div>
+
+                              <div class="tri-radio-wrapper">
+
+                                 <label>Asistencia a Eventos</label>
+
+                                 <div class="radio-row">
+
+                                    <div>
+                                       <label class="radio-style">Conferencista
+                                          <input type="radio" value="Conferencista" name="asistencia-eventos" v-model="convenio.propiedad['Asistencia a Eventos']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Expositor
+                                          <input type="radio" value="expositor" name="asistencia-eventos" v-model="convenio.propiedad['Asistencia a Eventos']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                    <div>
+                                       <label class="radio-style">Asistencia
+                                          <input type="radio" value="asistencia" name="asistencia-eventos" v-model="convenio.propiedad['Asistencia a Eventos']">
+                                          <span class="fakeradio"></span>
+                                       </label>
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                              <div class="semi-wrapper">
+
+                                 <label>Seminario</label>
+
+                                 <div v-for="seminario in convenio.propiedad.seminarios" class="tri-field-row row">
+
+                                    <div class="col-40">
+
+                                       <label>Nombre de Seminario</label>
+
+                                       <input v-model="seminario.nombre" type="text"  />
+
+                                    </div>
+
+                                    <div class="col-25">
+
+                                       <label>Ciudad de Seminario</label>
+
+                                       <input v-model="seminario.ciudad" type="text"  />
+
+                                    </div>
+
+                                    <div class="col-25">
+
+                                       <label>No. Asistentes</label>
+
+                                       <input v-model="seminario.asistentes" type="number"  />
+
+                                    </div>
+
+                                    <div class="col-10">
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="seminarios" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                              <div class="semi-wrapper">
+
+                                 <label>Talleres/Charlas</label>
+
+                                 <div v-for="taller in convenio.propiedad.talleres" class="tri-field-row row">
+
+                                    <div class="col-40">
+
+                                       <label>Nombre Taller / Charla</label>
+
+                                       <input v-model="taller.nombre" type="text"  />
+
+                                    </div>
+
+                                    <div class="col-25">
+
+                                       <label>Ciudad Taller / Charla</label>
+
+                                       <input v-model="taller.ciudad" type="text"  />
+
+                                    </div>
+
+                                    <div class="col-25">
+
+                                       <label>No. Asistentes</label>
+
+                                       <input v-model="taller.asistentes" type="number"  />
+
+                                    </div>
+
+                                    <div class="col-10">
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="talleres" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+
+                                 </div>
+
+                              </div>
+
+                           </div>
+
+                           <div>
+                              
+                              <div class="row multi-campo-row">
+
+                                 <div class="col-33">
+            
+                                    <label>Doctor</label>
+
+                                    <div v-for="campo in convenio.propiedad['Doctor']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Doctor" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Estudiante de Doctorado</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Estudiante de Doctorado']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Estudiante de Doctorado" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Maestría</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Maestria']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Maestria" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                              <div class="row multi-campo-row">
+
+                                 <div class="col-33">
+            
+                                    <label>Estudiante de Maestría</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Estudiante de Maestría']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Estudiante de Maestría" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Especialista</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Especialista']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Especialista" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Estudiante de Especialista</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Estudiante de Especialista']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Estudiante de Especialista" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                              <div class="row multi-campo-row">
+
+                                 <div class="col-33">
+            
+                                    <label>Profesional</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Profesional']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Profesional" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Estudiante de Pregrado</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Estudiante de Pregrado']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Estudiante de Pregrado" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                                 <div class="col-33">
+            
+                                    <label>Tecnólogo</label>
+            
+                                    <div v-for="campo in convenio.propiedad['Tecnólogo']" class="multi-campo">
+
+                                       <input v-model="campo.nombre" type="text"  />
+
+                                       <a v-if="!me.isSuperAdmin" href="#" data-campo="Tecnólogo" @click="addMultiCampo"><i class="icon-plus"></i></a>
+
+                                    </div>
+            
+                                 </div>
+            
+                              </div><!-- /row -->
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="!me.isSuperAdmin" class="buttons">
+
+                        <button>Guardar</button>
+
+                     </div>
+
+                  </ajax-form>
+
+               </div><!-- /multiform-page -->
+
+            </div>
+
+          </div>
+ 
+       </div>
+ 
+    </div>
+
+
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

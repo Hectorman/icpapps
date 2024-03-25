@@ -1,0 +1,378 @@
+<div class="outter-wrapper even-cols" id="beneficio">
+
+   <div id="notas-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+      <div class="nota-form default-form">
+
+         <h2>Declinar Contenido</h2>
+
+         <label>Observaciones</label>
+
+         <textarea name="nota"></textarea>
+         <p class="text-danger nota-error">Debes escribir algo</p>
+
+         <div class="buttons">
+
+            <button class="primary-btn" id="agregarNota" @click="enviarObservaciones" >ENVIAR OBSERVACIONES</button>
+
+         </div>
+
+         <p class="text-danger server-error">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+      </div>
+
+   </div>
+
+   <div class="start-col">
+
+      <%- partial('../../partials/beneficios-sidebar.ejs') %>
+  
+   </div>
+ 
+   <div class="end-col">
+ 
+      <div class="main-content beneficio-single" v-cloak>
+
+         <div class="container">
+
+            <a v-if="me.isDirector" class="dash-btn" href="/dashboard"><i class="icon-dashboard"></i> Dashboard</a>
+
+            <div v-if="beneficio">
+ 
+               <h1>{{ beneficio.titulo }}</h1>
+
+               <ajax-form v-show="beneficio && me.isDirector && beneficio.estado == 'pendiente por asignar funcionario'" action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+               
+                  <div class="buscar-funcionario" >
+
+                     <input class="autocomplete-nombre" placeholder="Buscar Funcionario..." type="text" />
+                     
+                     <ajax-button type="submit" :syncing="syncing" class="primary-btn">ASIGNAR</ajax-button>
+
+                  </div>
+
+                  <p class="error" v-if="formErrors.asignadoA">Debes buscar un funcionario por el nombre y seleccionarlo de la lista.</p>
+
+               </ajax-form>
+
+               <div v-if="!( me.isDirector && beneficio.estado == 'pendiente por asignar funcionario' )" class="asignado">
+
+                  <!-- <div class="nombre"><span v-if="nombreFuncionario">{{ nombreFuncionario }} <i @click="editFuncionario" v-if="me.isDirector" class="icon-edit"></i></span></div> -->
+
+                  <div class="estado" :class="beneficio.estado == 'proyecto aprobado' && 'aprobado'">{{ beneficio.estado }}</div>
+
+               </div>
+
+               <div class="checklist">
+
+                  <div v-for="item in contenidoInicial" :class="beneficio[ item.campo ] ? 'completo' : ''">
+
+                     <div class="check-row">
+
+                        <div class="check">
+
+                           <i class="icon-check"></i>
+
+                        </div>
+
+                        <h2>{{ item.nombre }}</h2>
+
+                     </div>
+
+                     <div v-show="item.campo == 'aprobadoGerencia' && beneficio.estado == 'pendiente por asignar autoridad técnica' && me.rolBeneficios == 'Líder Beneficios Tributarios'" >
+
+                        <ajax-form action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+                  
+                           <div class="buscar-funcionario" >
+         
+                              <input class="autocomplete-nombre" placeholder="Buscar autoridad técnica..." type="text" />
+                              
+                              <ajax-button type="submit" :syncing="syncing" class="primary-btn">ASIGNAR</ajax-button>
+         
+                           </div>
+         
+                           <p class="error" v-if="formErrors.asignadoA">Debes buscar un funcionario por el nombre y seleccionarlo de la lista.</p>
+         
+                        </ajax-form>
+
+                     </div>
+
+                     <div v-if="item.campo == 'aprobadoGerencia' && beneficio.estado == 'pendiente de aprobación gerencia'" >
+
+                        <ajax-form v-if="me.rolBeneficios == 'Autoridad Técnica'" class="step-forms" action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleGerenciaForm" @submitted="submittedForm()">
+
+                           <div class="buttons">
+                              
+                              <a @click="abrirRecomendaciones" class="cancelar" href="#">DECLINAR</a>
+
+                              <ajax-button type="submit" :syncing="syncing" class="primary-btn">APROBAR</ajax-button>
+
+                           </div>
+
+                        </ajax-form>
+
+                        <div v-else class="readonly-wrapper">
+
+                           Contenido enviado para revisión.
+
+                        </div>
+                     
+                     </div>
+
+                     <div v-if="( item.campo == 'aprobadoGerencia' && beneficio.estado == 'pendiente observaciones gerencia' ) ||
+                                ( item.campo == 'aprobadoComite' && beneficio.estado == 'pendiente observaciones comité' ) ||
+                                ( item.campo == 'aprobadoFinal' && beneficio.estado == 'pendiente observaciones finales' ) && 
+                                beneficio.observaciones" >
+
+                        <div class="readonly-wrapper">
+
+                           <h3>Observaciones:</h3>
+
+                           <p>{{ beneficio.observaciones }}</p>
+
+                        </div>
+
+                        <a v-if="!me.isSuperAdmin" class="primary-btn" :href="'/editar-beneficio/' + beneficio.id">Realizar Ajustes</a>
+
+                     </div>
+
+                     <div v-if="item.campo == 'aprobadoComite' && beneficio.estado == 'pendiente de aprobación comité'" >
+
+                        <ajax-form v-if="me.rolBeneficios == 'Líder Comité Expertos'" class="step-forms" action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleComiteForm" @submitted="submittedForm()">
+
+                           <div class="buttons">
+                              
+                              <a @click="abrirRecomendaciones" class="cancelar" href="#">DECLINAR</a>
+
+                              <ajax-button type="submit" :syncing="syncing" class="primary-btn">APROBAR</ajax-button>
+
+                           </div>
+
+                        </ajax-form>
+
+                        <div v-else class="readonly-wrapper">
+
+                           Contenido enviado para revisión.
+
+                        </div>
+                     
+                     </div>
+
+                     <div v-if="item.campo !== 'tipologia' && 
+                                item.campo !== 'archivoUno' &&
+                                item.campo !== 'archivoDos' &&
+                                beneficio[ item.campo ]" class="readonly-wrapper">
+
+                        <span v-if="item.campo == 'aprobadoGerencia'">Aprobado por autoridad técnica</span>
+
+                        <span v-else-if="item.campo == 'aprobadoComite'">Apropado por comité</span>
+
+                        <span v-else-if="item.campo == 'aprobadoFinal'">Proyecto aprobado</span>
+
+                        <span v-else-if="item.campo == 'valorVigencias'">
+                           
+                           <table class="vigencias-table">
+                              <tr>
+                                 <th>Año</th>
+                                 <th>Valor</th>
+                              </tr>
+                              <tr v-for="(vigencia, index) in beneficio.valorVigencias">
+                                 <td>{{ vigencia[0] }}</td>
+                                 <td>{{ vigencia[1] }}</td>
+                              </tr>
+                           </table>
+
+                        </span>
+
+                        <span v-else>{{ beneficio[ item.campo ] }}</span>
+
+                     </div>
+
+                     <div v-if="item.campo == 'tipologia' && beneficio[ item.campo ]" class="input-wrapper">
+
+                        <div class="readonly-wrapper">Se debe clasificar el tipo de proyecto de carácter de investigación científica que se presenta, de acuerdo con estas opciones:</div>
+
+                        <div class="radio-list">
+
+                           <div>
+
+                              <label class="radio-style">Investigación científica 
+                                 <input required type="radio" value="Investigación científica" name="tipologia" v-model="beneficio.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Investigación científica'" class="radio-style child">Investigación básica 
+                                 <input required type="radio" value="Investigación básica" name="investigacion" v-model="beneficio.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Investigación científica'" class="radio-style child">Investigación básica dirigida
+                                 <input required type="radio" value="Investigación básica dirigida" name="investigacion" v-model="beneficio.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Investigación científica'" class="radio-style child">Investigación aplicada
+                                 <input required type="radio" value="Investigación aplicada" name="investigacion" v-model="beneficio.investigacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                           <div>
+
+                              <label class="radio-style">Desarrollo tecnológico 
+                                 <input required type="radio" value="Desarrollo tecnológico" name="tipologia" v-model="beneficio.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Desarrollo tecnológico'" class="radio-style child">Desarrollo Tecnológico  
+                                 <input required type="radio" value="Desarrollo Tecnológico" name="desarrollo" v-model="beneficio.desarrollo" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Desarrollo tecnológico'" class="radio-style child">Desarrollo experimental 
+                                 <input required type="radio" value="Desarrollo experimental" name="desarrollo" v-model="beneficio.desarrollo" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                           <div>
+
+                              <label class="radio-style">Innovación tecnológica 
+                                 <input required type="radio" value="Innovación tecnológica" name="tipologia" v-model="beneficio.tipologia" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Innovación tecnológica'" class="radio-style child">Productos ( Bienes o servicios)   
+                                 <input required type="radio" value="Productos" name="innovacion" v-model="beneficio.innovacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                              <label v-if="beneficio.tipologia == 'Innovación tecnológica'" class="radio-style child">Proceso ( Productivo o presentación de servicios )
+                                 <input required type="radio" value="Proceso" name="innovacion" v-model="beneficio.innovacion" >
+                                 <span class="fakeradio"></span>
+                              </label>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="item.campo == 'archivoUno' && beneficio[ item.campo ]" v-for="version in beneficio.archivoUno" class="vista-previa">
+
+                        <div>
+
+                           <div>
+
+                              <img src="/images/doc.png" />
+
+                           </div>
+
+                           <div>
+
+                              <h4>{{ version.fileName }}</h4>
+                              <p>{{ fechaFromNow( version.date ) }}</p>
+
+                           </div>
+
+                        </div>
+
+                        <div class="descargar">
+
+                          <a target="_blank" :href="'/files/' + version.ruta">Descargar <i class="icon-download"></i></a>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="item.campo == 'archivoDos' && beneficio[ item.campo ]" v-for="version in beneficio.archivoDos" class="vista-previa">
+
+                        <div>
+
+                           <div>
+
+                              <img src="/images/doc.png" />
+
+                           </div>
+
+                           <div>
+
+                              <h4>{{ version.fileName }}</h4>
+                              <p>{{ fechaFromNow( version.date ) }}</p>
+
+                           </div>
+
+                        </div>
+
+                        <div class="descargar">
+
+                          <a target="_blank" :href="'/files/' + version.ruta">Descargar <i class="icon-download"></i></a>
+
+                        </div>
+
+                     </div>
+
+                     <div v-if="item.campo == 'aprobadoFinal' && beneficio.estado == 'pendiente de aprobación final'" >
+
+                        <ajax-form v-if="( me.rolBeneficios == 'Líder Comité Expertos' && !beneficio.aprobadoFinalComite ) ||
+                                         ( me.rolBeneficios == 'Autoridad Técnica' && !beneficio.aprobadoFinalAutoridad ) ||
+                                         ( me.rolBeneficios == 'Gerente' && !beneficio.aprobadoFinalGerente ) ||
+                                         ( me.rolBeneficios == 'Director' && !beneficio.aprobadoFinalDirector ) " class="step-forms" action="updateBeneficio" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleFinalForm" @submitted="submittedForm()">
+
+                           <div class="buttons">
+                              
+                              <a @click="abrirRecomendaciones" class="cancelar" href="#">DECLINAR</a>
+
+                              <ajax-button type="submit" :syncing="syncing" class="primary-btn">APROBAR</ajax-button>
+
+                           </div>
+
+                        </ajax-form>
+
+                        <div class="readonly-wrapper">
+
+                           <ul class="final-list">
+                              <li :class="beneficio.aprobadoFinalAutoridad && 'aprobado'">
+                                 <div class="check"><i class="icon-check"></i></div>
+                                 <p>Aprobado por autoridad técnica</p>
+                              </li>
+                              <li :class="beneficio.aprobadoFinalGerente && 'aprobado'">
+                                 <div class="check"><i class="icon-check"></i></div>
+                                 <p>Aprobado por gerente</p>
+                              </li>
+                              <li :class="beneficio.aprobadoFinalDirector && 'aprobado'">
+                                 <div class="check"><i class="icon-check"></i></div>
+                                 <p>Aprobado por director</p>
+                              </li>
+                              <li :class="beneficio.aprobadoFinalComite && 'aprobado'">
+                                 <div class="check"><i class="icon-check"></i></div>
+                                 <p>Aprobado por lider de comités</p>
+                              </li>
+                           </ul>
+
+                        </div>
+                     
+                     </div>
+
+                  </div>
+
+               </div>
+
+               <a v-if="me.rolBeneficios == 'profesional' && beneficio.estado == 'funcionario asignado'" class="primary-btn" :href="'/editar-beneficio/' + beneficio.id">Diligenciar Proyecto</a>
+
+               <a v-if="me.rolBeneficios == 'profesional' && beneficio.estado == 'pendiente adjuntar formatos'" class="primary-btn" :href="'/editar-beneficio/' + beneficio.id">Adjuntar Formatos</a>
+
+            </div>
+
+         </div>
+ 
+      </div>
+ 
+   </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

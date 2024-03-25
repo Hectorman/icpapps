@@ -1,0 +1,91 @@
+<div class="outter-wrapper even-cols" id="nueva-comision">
+
+    <div class="start-col">
+
+        <div class="side-header">
+  
+         <div class="titulo">
+            <img src="/images/ecopetrol-icon.png" />
+            <h1>Gestión de convenios</h1>
+         </div>
+
+         <div class="illustration">
+           <img src="/images/title.svg" />
+
+           <img src="images/concept.png"
+                  srcset="images/concept@2x.png 2x,
+                  images/concept@3x.png 3x"
+                  class="concept">
+         </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+         <div class="container">
+ 
+          <ajax-form class="default-form comi-form" action="crearComision" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+
+               <h3>Bienvenido,</h3>
+               <h2>A continuación adjunta 
+                  el documento del convenio, completado previamente.</h2>
+              
+              <div class="form-step active">
+                 <div class="form-group">
+                   <label>Nombre del convenio</label>
+                   <input type="text" required maxlength="300" class="capitalize" v-model="formData.titulo"  />
+                 </div>
+
+                 <div class="form-group">
+                  <label>Archivo del convenio</label>
+                  <input type="text" required maxlength="300" class="capitalize" v-model="formData.archivo"  />
+                </div>
+              </div><!-- /form-step -->
+
+              <div class="form-group btt-wrapper">
+                  <ajax-button id="submitComision" type="submit" :syncing="syncing" class="btn-block primary-btn enviar-btn">Continuar</ajax-button>
+             </div>
+
+          </ajax-form>
+        </div>
+ 
+       </div>
+ 
+    </div>
+
+    <div id="urgente-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+        <img src="/images/clock.png"
+            srcset="images/clock@2x.png 2x,
+                    images/clock@3x.png 3x"
+            >
+
+        <h2>¿Es un Viaje Urgente?</h2>
+
+        <div class="buttons">
+          <button class="no" @click="urgenteClick">NO</button>
+          <button class="si" @click="urgenteClick">SI</button>
+        </div>
+  
+    </div>
+
+    <div id="gracias-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+        <i class="icon-aprovadas"></i>
+
+        <h2>Gracias, su comisión ha sido registrada exitósamente</h2>
+
+        <div class="buttons">
+          <button class="no" @click="graciasClick">Ver mis comisiones</button>
+          <button class="si" @click="graciasClick">Crear nueva comisión</button>
+        </div>
+
+    </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 
