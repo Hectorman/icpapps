@@ -1,0 +1,112 @@
+<div class="outter-wrapper convenios-wrapper" id="gracias">
+
+    <div class="start-col">
+
+        <div class="side-header">
+
+            <div>
+  
+               <div class="titulo">
+                  <img src="/images/ecopetrol-icon.png" />
+                  <h1>Gestión de Convenios</h1>
+               </div>
+
+               <div class="side-menu">
+
+                  <ul>
+                     <li @click="openList" class="mis-convenios list-wrapper">
+                        <div class="top-part">
+                           <i class="icon-grid"></i>
+                           <span v-if="me.isSuperAdmin">Convenios</span>
+                           <span v-else>Mis Convenios</span>
+                        </div>
+
+                        <div class="titles list-child">
+                           <a v-for="(convenio, index) in convenios" :href="'/convenio/' + convenio.id">{{ convenio.titulo }}</a>
+                        </div>
+                     </li>
+                  </ul>
+
+                  <a v-if="!me.isSuperAdmin" href="/nuevo-convenio" class="more">
+                     <div class="plus-wrapper"><i class="icon-plus"></i></div>
+                     <span>Añadir Convenio</span>
+                  </a>
+
+               </div>
+
+            </div>
+  
+           <div class="cerrar">
+             
+               <a href="/logout">
+                  <div class="wrapper-icon"><i class="icon-logout"></i></div>
+                  <span>Cerrar Sesión</span>
+               </a>
+
+           </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+
+      <div @click="toggleSidebar" class="wiggle">
+         <i class="icon-arrow_back_ios"></i>
+      </div>
+ 
+       <div class="main-content" v-cloak>
+
+         <div v-if="me.isSuperAdmin" class="page-title">Convenios</div>
+         <div v-else class="page-title">Mis Convenios</div>
+
+         <div class="container">
+ 
+            <div class="comisiones-list">
+
+               <div class="comision head">
+                  <div><p>Convenio</p></div> 
+                  <div><p>No. Convenio</p></div> 
+                  <div><p>Estado</p></div> 
+                  <div><p>Temática I</p></div>
+                  <div><p>Tipo de Convenio</p></div>
+               </div>
+
+               <div v-for="(convenio, index) in convenios" class="comision">
+   
+                 <div>
+                  <h3><a :href="'/convenio/' + convenio.id">{{ convenio.titulo }}</a></h3>
+                 </div>
+   
+                 <div>
+                   <h3 v-if="convenio.campos">{{ convenio.campos['Número del Convenio'] }}</h3>
+                 </div>
+   
+                 <div>
+                   <h3 v-if="convenio.campos" class="estado-convenio">{{ convenio.campos['Estado del Convenio'] }}</h3>
+                 </div>
+   
+                 <div>
+                   <h3 v-if="convenio.campos">{{ convenio.campos['Temática I'] }}</h3>
+                 </div>
+
+                 <div>
+                   <h3 v-if="convenio.campos" class="tipo-convenio">{{ convenio.campos['Tipo de Convenio'] }}</h3>
+                 </div>
+   
+               </div>
+   
+             </div><!-- /convenios-list -->
+
+          </div>
+ 
+       </div>
+ 
+    </div>
+
+
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

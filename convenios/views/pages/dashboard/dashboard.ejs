@@ -1,0 +1,244 @@
+<div class="outter-wrapper convenios-wrapper" id="dashboard">
+
+    <div class="start-col">
+
+        <div class="side-header">
+
+            <div>
+  
+               <div class="titulo">
+                  <img src="/images/ecopetrol-icon.png" />
+                  <h1>Gestión de Convenios</h1>
+               </div>
+
+               <div class="side-menu">
+
+                  <ul>
+                     <li @click="openList" class="mis-convenios list-wrapper">
+                        <div class="top-part">
+                           <i class="icon-grid"></i>
+                           <span v-if="me.isSuperAdmin">Convenios</span>
+                           <span v-else>Mis Convenios</span>
+                        </div>
+
+                        <div class="titles list-child">
+                           <a v-for="(convenio, index) in convenios" :href="'/convenio/' + convenio.id">{{ convenio.titulo }}</a>
+                        </div>
+                     </li>
+                  </ul>
+
+                  <a v-if="!me.isSuperAdmin" href="/nuevo-convenio" class="more">
+                     <div class="plus-wrapper"><i class="icon-plus"></i></div>
+                     <span>Añadir Convenio</span>
+                  </a>
+
+               </div>
+
+            </div>
+  
+           <div class="cerrar">
+             
+               <a href="/logout">
+                  <div class="wrapper-icon"><i class="icon-logout"></i></div>
+                  <span>Cerrar Sesión</span>
+               </a>
+
+           </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+
+      <div @click="toggleSidebar" class="wiggle">
+         <i class="icon-arrow_back_ios"></i>
+      </div>
+ 
+       <div class="main-content" v-cloak>
+
+         <div class="page-title">Convenios</div>
+
+         <div class="container">
+ 
+            <div class="filters">
+
+               <div class="select-filter">
+
+                  <select @change="filterConvenios" class="filterByGerencia">
+                     <option :value="gerencia.valor" v-for="gerencia in listaGerencias">{{ gerencia.valor }}</option>
+                  </select>
+
+               </div>
+
+               <div class="select-filter">
+
+                  <select @change="filterConvenios" class="filterByYear">
+                     <option v-for="anio in listaAnios" :value="anio">{{ anio }}</option>
+                  </select>
+
+               </div>
+
+               <div class="select-filter">
+
+                  <select @change="filterConvenios" class="filterByEstado">
+                     <option value="vigente">Vigente</option>
+                     <option value="cerrado">Cerrado</option>
+                  </select>
+
+               </div>
+
+               <div class="select-filter">
+
+                  <select @change="filterConvenios" class="filterByAliado">
+                     <option v-for="aliado in listaAliados" :value="aliado">{{ aliado }}</option>
+                  </select>
+
+               </div>
+
+            </div>
+
+            <div class="row">
+
+               <div class="col-50">
+
+                  <div class="dash-box textual">
+
+                     <div><span class="bar">|</span> <h3>Número de convenios</h3></div>
+
+                     <div class="value">{{ totals.numConvenios }}</div>
+
+                  </div>
+               
+               </div>
+
+               <div class="col-50">
+                  
+                  <div class="dash-box textual">
+
+                     <div><span class="bar">|</span> <h3>Inversión total USD</h3></div>
+
+                     <div class="value">{{ moneyFormat( totals.inversionTotal ) }}</div>
+
+                  </div>
+
+               </div>
+
+            </div>
+
+            <div class="row">
+
+               <div class="col-50">
+
+                  <div class="dash-box">
+
+                     <div class="row">
+
+                        <div class="col-50">
+
+                           <h3>Convenios por segmento</h3>
+
+                           <div class="convenciones">
+
+                              <div>
+
+                                 <span class="bullet"></span> UP: {{ totals.UP }}
+
+                              </div>
+
+                              <div>
+
+                                 <span class="bullet"></span> MID: {{ totals.MID }}
+
+                              </div>
+
+                              <div>
+
+                                 <span class="bullet"></span> DOWN: {{ totals.DOWN }}
+
+                              </div>
+
+                           </div>
+
+                        </div>
+
+                        <div class="col-50">
+
+                           <div class="graph-wrapper">
+
+                              <div class="stream-chart ct-chart ct-perfect-fourth"></div>
+
+                              <div class="avance-label">
+
+                                  <h3><span @click="showList" class="count">{{ totals.numConvenios }}</span></h3>
+                                  <p>TOTAL</p>
+
+                              </div>
+
+                              <div class="percent-labels">
+
+                                  <span>0</span>
+                                  <span>{{ totals.numConvenios }}</span>
+
+                              </div>
+
+                           </div>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+               
+               </div>
+
+               <div class="col-50">
+                  
+                  <div class="dash-box recurso-box">
+
+                     <div class="row">
+
+                        <div class="col-20">
+
+                           <h3>Recurso humano</h3>
+
+                        </div>
+
+                        <div class="col-80">
+
+                           <div class="recurso-chart ct-major-tenth"></div>
+
+                        </div>
+
+                     </div>
+
+                  </div>
+
+               </div>
+
+            </div><!-- /row -->
+
+            <div class="dash-box prod-tec">
+
+               <h3>Productos Tecnológicos</h3>
+
+               <div class="number">{{ totals.productosTecnologicos }}</div>
+
+               <h4>PRODUCTOS</h4>
+
+               <!-- <img src="images/support.svg" /> -->
+
+            </div>
+
+         </div>
+ 
+       </div>
+ 
+    </div>
+
+
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 
