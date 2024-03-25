@@ -1,0 +1,163 @@
+<div class="outter-wrapper even-cols" id="gracias">
+
+    <div class="start-col">
+
+        <div class="side-header">
+  
+           <div class="titulo">
+              <img src="/images/ecopetrol-icon.png" />
+              <h1>Mis Comisiones</h1>
+           </div>
+  
+           <div class="illustration">
+             <img src="/images/illustration.svg" />
+           </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+
+         <a class="secondary-btn" href="/nueva-comision"><i class="icon-plus"></i> Nueva Comisión</a>
+
+         <div class="container">
+ 
+            <div class="comisiones-list">
+
+               <div class="comision head">
+                  <div><p>Fecha de solicitud</p></div> 
+                  <div><p>Destino</p></div> 
+                  <div><p>Días de Comisión</p></div> 
+                  <div><p>Estado</p></div>
+                  <div><p>Acciones</p></div> 
+               </div>
+
+               <div v-for="(comision, index) in comisiones" :class="comision.tipoDestino == 'nacional' && 'nacional'" class="comision">
+   
+                 <div>
+                   <h3 class="capitalize">{{ prettyDate( comision.createdAt ) }}</h3>
+                 </div>
+   
+                 <div>
+                   <h3>{{ comision.ciudad }}</h3>
+                 </div>
+   
+                 <div>
+                   <h3>{{ Math.ceil( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) + 1 ) }}</h3>
+                 </div>
+   
+                 <div class="cancel-row btt-row state">
+                   <button v-if="comision.rechazada" title="rechazado" :data-id="comision.id" data-action="rechazado" class="cancel open-comision"><i class="icon-close"></i></button>
+                   <button v-else-if="comision.indexBandeja == 3" title="aprobado" :data-id="comision.id" data-action="aprobado" class="check open-comision"><i class="icon-check"></i></button>
+                   <button v-else :title="'pendiente de aprobación ' + bandejaAprobacion[ comision.indexBandeja ]" :data-id="comision.id" data-action="aprobado" class="pending open-comision"><i class="icon-clock"></i></button>
+                 </div>
+
+                 <div class="acciones">
+
+                  <a title="Ver detalle comisión" :data-id="comision.id" class="open-comision" href="#"><i class="icon-icon-1"></i></a>
+                  <a v-if="!comision.indexBandeja && !comision.rechazada" title="Editar comisión" :href="'/editar-comision/' + comision.id"><i class="icon-edit"></i></a>
+                  <a v-if="!comision.indexBandeja && !comision.rechazada" @click="confirmarEliminarComision" :data-id="comision.id" title="Eliminar comisión" href="#"><i class="icon-trash"></i></a>
+
+                 </div>
+   
+               </div>
+   
+             </div><!-- /comisiones-list -->
+
+          </div>
+ 
+       </div>
+ 
+    </div>
+
+    <div id="comision-popup" class="white-popup comision-popup mfp-hide">
+
+      <h2>Detalle comisión</h2>
+
+      <div class="alignCenter"><p>Bandeja de aprobación</p></div>
+
+      <div class="alignCenter"><p>Última actualización: {{ prettyDate( popComision.updatedAt ) }}</p></div>
+  
+        <div class="bandeja">
+
+          <div v-for="(paso, index) in bandejaAprobacion" :class="(index + 1) <= popComision.indexBandeja && 'aprobado'" class="paso">
+
+            <p>{{ paso }}</p>
+
+            <div :title="'Pendiente de aprobación ' + paso" v-if="(index + 1) > popComision.indexBandeja && !popComision.rechazada" class="estado-paso">
+
+              <i class="icon-clock"></i>
+
+            </div>
+
+            <div :title="'Rechazada por el ' + paso" v-if="index == popComision.indexBandeja && popComision.rechazada" class="estado-paso rechazada">
+
+              <i class="icon-close"></i>
+
+            </div>
+
+            <div :title="'Aprobado por el ' + paso" v-if="(index + 1) <= popComision.indexBandeja" class="estado-paso aprobado">
+
+              <i class="icon-check"></i>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="detalle">
+
+          <h4>{{ popComision.objeto }}</h4>
+
+          <p>Objeto comisión</p>
+
+          <div class="row">
+
+            <div class="col-50">
+
+              <h4>{{ popComision.ciudadOrigen }}</h4>
+              <p>Ciudad origen</p>
+
+              <h4>{{ popComision.ciudad }}</h4>
+              <p>Ciudad destino</p>
+
+            </div>
+
+            <div class="col-50">
+
+              <h4 class="date">{{ prettyDate( popComision.fechaInicial ) }}</h4>
+              <p><i class="icon-calendar"></i> Fecha inicial</p>
+
+              <h4 class="date">{{ prettyDate( popComision.fechaFinal ) }}</h4>
+              <p><i class="icon-calendar"></i> Fecha final</p>
+
+            </div>
+
+          </div>
+
+          <div v-if="popComision.motivoRechazo">
+
+            <h4>{{ popComision.motivoRechazo }}</h4>
+
+            <p>Motivo rechazo</p>
+
+          </div>
+
+        </div>
+
+        <div v-if="!popComision.indexBandeja && !popComision.rechazada" class="popup-footer">
+
+          <a class="secondary-btn blue-btn" :href="'/editar-comision/' + popComision.id"><i class="icon-edit"></i> Editar Comisión</a>
+
+        </div>
+  
+     </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

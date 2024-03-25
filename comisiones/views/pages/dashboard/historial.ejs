@@ -1,0 +1,120 @@
+<div id="historial" class="outter-wrapper wide-open">
+
+   <div class="start-col">
+
+      <div class="side-header">
+
+        <div class="logo-top">
+            <img src="/images/icon.png"
+                srcset="/images/icon@2x.png 2x,
+                        /images/icon@3x.png 3x"
+                class="icon">
+        </div>
+
+         <nav>
+
+            <ul>
+                <li class="home-btt">
+                    <a href="/bienvenido"><i class="icon-home"></i></a>
+                    <div class="decor"></div>
+                </li>
+                <li :class="estado == 'aprobadas' && 'active'">
+                    <a href="/historial/aprobadas"><i style="font-size:1.3em;" class="icon-aprovadas"></i></a>
+                    <div class="decor"></div>
+                </li> 
+                <li :class="estado == 'rechazadas' && 'active'">
+                    <a href="/historial/rechazadas"><i style="font-size:1.6em;" class="icon-canceladas"></i></a>
+                    <div class="decor"></div>
+                </li> 
+            </ul>
+
+         </nav>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+       <div class="admin-content">
+
+          <a class="back" href="/bienvenido"><i class="icon-arrow"></i> Comisiones {{ estado }}</a>
+
+          <div class="filters">
+
+            <div class="select-filter">
+               
+              <select @change="filterTipo">
+                <option value="false" selected="selected">Tipo de viaje</option>
+                <option value="nacional">Nacional</option>
+                <option value="internacional">Internacional</option>
+              </select>
+
+            </div>
+
+          </div>
+          
+          <div class="comisiones-list">
+
+            <div v-for="(comision, index) in comisiones" :class="comision.tipoDestino == 'nacional' && 'nacional'" class="comision">
+
+              <div>
+                <h3 class="capitalize">{{ comision.nombres }}</h3>
+                <p>Nombre</p>
+              </div>
+
+              <div>
+                <h3>{{ comision.ciudad }}</h3>
+                <p>Destino</p>
+              </div>
+
+              <div>
+                <h3>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) ) }}</h3>
+                <p>Días de Comisión</p>
+              </div>
+
+              <div>
+                <h3 class="overflow-text">{{ comision.objeto }}</h3>
+                <p>Objetivo de Comisión</p>
+              </div>
+
+              <div>
+
+                <div v-if="comision.urgente">
+                  <span class="color-ind urgente"></span>
+                  <p>Solicitud Urgente</p>
+                </div>
+
+                <div v-else>
+                  <div v-if="comision.extemporanea">
+                    <span class="color-ind extra"></span>
+                    <p>Solicitud Extemporánea</p>
+                  </div>
+                  <div v-else>
+                    <span class="color-ind atiempo"></span>
+                    <p>Solicitud a Tiempo</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="cancel-row btt-row state">
+                <button v-if="estado == 'rechazadas'" title="rechazar" :data-id="comision.id" data-action="rechazado" class="cancel"><i class="icon-close"></i></button>
+                <button v-if="estado == 'aprobadas'" title="aprobar" :data-id="comision.id" data-action="aprobado" class="check"><i class="icon-check"></i></button>
+              </div>
+
+              <div class="btt-row">
+                 <h3>{{ comision.gerencia }}</h3>
+              </div>
+
+            </div>
+
+          </div>
+
+       </div><!-- /admin-content -->
+
+   </div><!-- /end-col-->
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

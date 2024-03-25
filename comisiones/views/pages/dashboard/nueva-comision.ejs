@@ -1,0 +1,269 @@
+<div class="outter-wrapper even-cols" id="nueva-comision">
+
+    <div class="start-col">
+
+        <div class="side-header">
+  
+           <div class="titulo">
+              <img src="/images/ecopetrol-icon.png" />
+              <h1>Comisiones ICP</h1>
+           </div>
+  
+           <div class="illustration">
+             <img src="/images/illustration.svg" />
+           </div>
+
+           <div class="progreso-bar">
+
+              <h3><span>{{ formStep * 25 }}</span>% completado</h3>
+
+              <div class="bar">
+                <div :style="'width:' + (formStep * 25) + '%' "></div>
+              </div>
+
+           </div>
+  
+        </div>
+  
+     </div>
+ 
+    <div class="end-col">
+ 
+       <div class="main-content" v-cloak>
+         <div class="container">
+
+          <div @click="prevTab" v-if="formStep > 0" class="prev-tab btn-block secondary-btn nav-btn prev-btn"><i class="icon-arrow"></i></div>
+ 
+          <ajax-form class="default-form comi-form" action="crearComision" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingForm" @submitted="submittedForm()">
+              
+            <input type="hidden" v-model="formData.id" />
+            
+            <div v-show="formStep == 0" class="form-step active">
+                <div class="form-group">
+                  <label>Nombre</label>
+                  <input type="text" readonly required maxlength="200" class="capitalize" v-model="formData.nombres"  />
+                </div>
+
+                <div class="form-group">
+                  <label>Gerencia</label>
+                  <input type="text" readonly required maxlength="200" v-model="formData.gerencia"  />
+                </div>
+
+                <div class="form-group">
+                  <label>Departamento</label>
+                  <input type="text" readonly required maxlength="200" v-model="formData.departamento"  />
+                </div>
+
+                <div class="space"></div>
+
+                <div data-error="tipoComision" class="form-group inline-label">
+                  <label>Seleccione Tipo de Comisión</label>
+                  <div class="radio-row">
+                    <label class="radio-container">Capacitación
+                      <input v-model="formData.tipoComision" value="capacitacion" type="radio" name="tipoComision">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="radio-container">Trabajo
+                      <input v-model="formData.tipoComision" value="trabajo" type="radio" name="tipoComision">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <p v-if="formErrors.tipoComision" class="text-danger comi-error">Debes seleccionar una opción</p>
+                </div>
+
+                <div data-error="ponencia" class="form-group inline-label">
+                  <label>¿Realizará una ponencia?</label>
+                  <div class="radio-row">
+                    <label class="radio-container">Si
+                      <input v-model="formData.ponencia" value="true" type="radio" name="ponencia">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="radio-container">No
+                      <input v-model="formData.ponencia" value="false" type="radio" name="ponencia">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <p v-if="formErrors.ponencia" class="text-danger comi-error">Debes seleccionar una opción</p>
+                </div>
+
+                <div data-error="numeroFicha" v-if="formData.ponencia == 'true'" class="form-group">
+                  <label>Número de ficha de publicación</label>
+                  <input type="text" maxlength="200" v-model="formData.numeroFicha"  />
+                  <p v-if="formErrors.numeroFicha" class="text-danger comi-error">Debes ingresar el número de ficha</p>
+                </div>
+
+              </div><!-- /form-step -->
+
+              <div v-show="formStep == 1" class="form-step">
+
+                <div data-error="ciudadOrigen" class="form-group">
+                  <label>Seleccione ciudad de origen</label>
+                  <input placeholder="Ciudad origen" class="subtle autocomplete-ciudad-origen" type="text" required maxlength="200" v-model="formData.ciudadOrigen"  />
+                  <p v-if="formErrors.ciudadOrigen" class="text-danger comi-error">Debes escribir una ciudad de origen</p>
+                </div>
+
+                <div class="space"></div>
+                
+                <div data-error="tipoDestino" class="form-group">
+                  <label>Seleccione Tipo de Destino</label>
+                  <div class="radio-row">
+                    <label class="radio-container">Internacional
+                      <input @change="destinoChange" v-model="formData.tipoDestino" value="internacional" type="radio" name="tipoDestino">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label class="radio-container">Nacional
+                      <input @change="destinoChange" v-model="formData.tipoDestino" value="nacional" type="radio" name="tipoDestino">
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <p v-if="formErrors.tipoDestino" class="text-danger comi-error">Debes seleccionar una opción</p>
+                </div>
+
+                <div v-show="formData.tipoDestino == 'internacional'" data-error="pais" class="form-group">
+                  <label>País de destino</label>
+                  <input placeholder="País" class="subtle autocomplete-pais" type="text" name="pais" maxlength="200" v-model="formData.pais"  />
+                  <p v-if="formErrors.pais" class="text-danger comi-error">Debes escribir un país de destino</p>
+                </div>
+
+                <div v-show="formData.tipoDestino == 'nacional' || formData.tipoDestino == 'internacional' && selectedPais" data-error="ciudad" class="form-group">
+                  <label>Ciudad de destino</label>
+                  <input placeholder="Ciudad" class="subtle autocomplete-ciudad" type="text" name="ciudad" maxlength="200" v-model="formData.ciudad"  />
+                  <p v-if="formErrors.ciudad" class="text-danger comi-error">Debes escribir una ciudad de destino</p>
+                </div>
+
+                <div class="space"></div><div class="space"></div>
+
+                <div data-error="entidad" class="form-group">
+                  <label>Empresa o evento a visitar</label>
+                  <input placeholder="Entidad" type="text" required maxlength="200" v-model="formData.entidad"  />
+                  <p v-if="formErrors.entidad" class="text-danger comi-error">Debes escribir una entidad</p>
+                </div>
+
+              </div><!-- /form-step -->
+
+              <div v-show="formStep == 2" class="form-step">
+
+                <div data-error="objeto" class="form-group">
+                  <label>Objeto de la Comisión</label>
+                  <input placeholder="Objeto" type="text" maxlength="200" v-model="formData.objeto"  />
+                  <p v-if="formErrors.objeto" class="text-danger comi-error">Debes escribir un objeto</p>
+                </div>
+
+                <div class="space"></div>
+
+                <div data-error="impactoComision" class="form-group">
+                  <label>Justificación de la Comisión</label>
+                  <textarea class="subtle" placeholder="Justificación de la Comisión" v-model="formData.impactoComision" ></textarea>
+                  <p v-if="formErrors.impactoComision" class="text-danger comi-error">Este campo es requerido</p>
+                </div>
+
+              </div>
+
+              <div v-show="formStep == 3" class="form-step">
+
+                <div class="row date-row">
+
+                  <div class="col-12 col-md-6">
+
+                    <div data-error="fechaInicial" class="form-group fecha-group">
+                      <label>Fecha de Ida</label>
+                      <input data-name="fechaInicial" readonly class="datepicker-input fecha-inicial" placeholder="Selecciona una fecha" type="text" v-model="formData.fechaInicial"  />
+                      <p style="font-size:.8em;">Incluir días de desplazamiento</p>  
+                      <p v-if="formErrors.fechaInicial" class="text-danger comi-error">Debes seleccionar una fecha de partida</p>
+                    </div>
+
+                  </div>
+
+                  <div class="col-12 col-md-6">
+
+                      <div data-error="fechaFinal" class="form-group fecha-group">
+                        <label>Fecha de Regreso</label>
+                        <input data-name="fechaFinal" readonly class="datepicker-input fecha-final" placeholder="Selecciona una fecha" type="text" v-model="formData.fechaFinal"  />
+                        <p v-if="formErrors.fechaFinal" class="text-danger comi-error">Debes seleccionar una fecha de regreso</p>
+                      </div>
+  
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                  <div class="opt-label-row">
+                    <label class="radio-container">
+                      <input 
+                        v-model="formData.cecografo"
+                        @change="cecoChange" 
+                        value="ceco" 
+                        type="radio" 
+                        name="cecografo">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label>CECO - Observaciones</label>
+                  </div>
+                  <textarea :disabled="formData.cecografo != 'ceco'" class="subtle radio-ceco" placeholder="Observaciones" v-model="formData.observaciones" ></textarea>
+                </div>
+                <p v-if="cloudError" class="text-danger comi-error">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+
+                <div class="form-group">
+                  <div class="opt-label-row">
+                    <label class="radio-container">
+                      <input 
+                        v-model="formData.cecografo"
+                        @change="cecoChange" 
+                        value="grafo" 
+                        type="radio" 
+                        name="cecografo">
+                      <span class="checkmark"></span>
+                    </label>
+                    <label>GRAFO</label>
+                  </div>
+                  <textarea :disabled="formData.cecografo != 'grafo'" class="subtle radio-grafo" placeholder="GRAFO" v-model="formData.grafo" ></textarea>
+                </div>
+                <p v-if="cloudError" class="text-danger comi-error">Ocurrió un error, inténtalo de nuevo más tarde.</p>
+             
+              </div>
+
+              <div class="form-group btt-wrapper only-next">
+                <a v-if="formStep < 3" href="#" @click="nextTab" class="btn-block secondary-btn nav-btn next-btn"><i class="icon-arrow"></i></a>
+                <ajax-button id="submitComision" v-else type="submit" :syncing="syncing" class="btn-block primary-btn enviar-btn">Enviar</ajax-button>
+              </div>
+
+          </ajax-form>
+        </div>
+ 
+       </div>
+ 
+    </div>
+
+    <div id="urgente-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+        <img src="/images/clock.png"
+            srcset="images/clock@2x.png 2x,
+                    images/clock@3x.png 3x"
+            >
+
+        <h2>¿Es un Viaje Urgente?</h2>
+
+        <div class="buttons">
+          <button class="no" @click="urgenteClick">NO</button>
+          <button class="si" @click="urgenteClick">SI</button>
+        </div>
+  
+    </div>
+
+    <div id="gracias-popup" class="white-popup demo-popup mfp-with-anim mfp-hide">
+
+        <i class="icon-aprovadas"></i>
+
+        <h2>{{ mensajeFinal }}</h2>
+
+        <div class="buttons">
+          <button class="no" @click="graciasClick">Ver mis comisiones</button>
+          <button class="si" @click="graciasClick">Crear nueva comisión</button>
+        </div>
+
+    </div>
+ 
+ </div>
+ 
+ <%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
+ 

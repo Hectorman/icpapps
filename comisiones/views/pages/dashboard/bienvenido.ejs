@@ -1,0 +1,500 @@
+<div id="bienvenido" class="outter-wrapper wide-open">
+
+   <div class="start-col">
+
+    <div id="rechazo-popup" class="white-popup comision-popup rechazo-popup mfp-hide">
+
+      <h2>Motivo del rechazo</h2>
+  
+      <textarea class="rechazo-text">
+  
+      </textarea>
+
+      <a class="secondary-btn blue-btn" @click="updateComision" href="#"><i class="icon-close"></i> Rechazar Comisión</a>
+  
+     </div>
+
+      <div class="side-header">
+
+        <div class="logo-top">
+            <img height="60" src="/images/icon.png"
+                srcset="/images/icon@2x.png 2x,
+                        /images/icon@3x.png 3x"
+                class="icon">
+        </div>
+
+         <nav>
+
+            <div class="active-btt">
+              <div class="decor"></div>
+            </div>
+
+            <ul>
+                <li class="home-btt">
+                    <a @click="virtualNav" title="Dashboard" href="/bienvenido"><i style="font-size:.9em;" class="icon-home"></i></a>
+                    <div class="decor"></div>
+                </li>
+                <li v-if="me.rolComisiones != 'Director'" class="li-pendientes">
+                    <a @click="virtualNav" title="Comisiones pendientes" href="/bienvenido/pendientes" ><i style="font-size:1.3em;" class="icon-clock"></i></a>
+                    <div class="decor"></div>
+                </li>
+                <li class="li-aprobadas">
+                    <a @click="virtualNav" title="Comisiones aprobadas" href="/bienvenido/aprobadas" ><i style="font-size:1.3em;" class="icon-aprovadas"></i></a>
+                    <div class="decor"></div>
+                </li> 
+                <li class="li-rechazadas">
+                    <a @click="virtualNav" title="Comisiones rechazadas" href="/bienvenido/rechazadas" ><i style="font-size:1.6em;" class="icon-canceladas"></i></a>
+                    <div class="decor"></div>
+                </li> 
+                <li class="li-usuarios">
+                    <a @click="virtualNav" title="Tendencias" href="/bienvenido/tendencias" ><i style="font-size:1.4em;" class="icon-stats-bars"></i></a>
+                    <div class="decor"></div>
+                </li> 
+            </ul>
+
+         </nav>
+
+      </div>
+
+   </div>
+
+   <div class="end-col">
+
+      <div class="vpages-wrapper">
+
+        <div style="display:none;" id="bienvenido-page" class="bienvenido-wrapper virtual-page">
+
+              <h2>ICP Comisiones</h2>
+
+              <div class="gerencias">
+
+                <div v-for="gerencia in listaGerencias" class="gerencia list-item">
+
+                  <a @click="virtualNav" :href="'/bienvenido/' + gerencia.valor.toLowerCase()" class="title">
+
+                    <div>
+
+                      <h2>{{ gerencia.valor }}</h2>
+
+                      <p>Comisión</p>
+
+                    </div>
+
+                    <div>
+
+                      <i class="icon-arrow"></i>
+
+                    </div>
+
+                  </a>
+
+                  <div class="totals">
+
+
+                  </div>
+
+                </div>
+
+              </div>
+
+          </div><!-- bienvenido-wrapper -->
+
+          <div style="display:none;" id="historial-page" class="admin-content virtual-page">
+
+              <a class="back" @click="virtualNav" href="/bienvenido"><i class="icon-arrow"></i> Comisiones {{ virtualSlug }}</a>
+    
+              <div class="filters">
+                   
+                <div class="select-filter">
+                  <label>Tipo de viaje</label>
+                  <select class="filter-tipo" @change="filterTipo">
+                    <option value="false" selected="selected">Todos</option>
+                    <option value="nacional">Nacional</option>
+                    <option value="internacional">Internacional</option>
+                  </select>
+                </div>
+  
+              </div>
+              
+              <div class="comisiones-list">
+    
+                <div v-for="(comision, index) in comisionesHistorial" :key="'comision-' + index" :class="comision.tipoDestino == 'nacional' && 'nacional'" class="comision list-item">
+    
+                  <div>
+                    <h3 class="capitalize">{{ comision.nombres }}</h3>
+                    <p>Nombre</p>
+                    <i @click="moreInfo" class="icon-eye trigger-more-info"></i>
+                  </div>
+    
+                  <div>
+                    <h3>{{ comision.ciudad }}</h3>
+                    <p>Destino</p>
+                  </div>
+    
+                  <div>
+                    <h3>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) + 1 ) }}</h3>
+                    <p>Días de Comisión</p>
+                  </div>
+    
+                  <div>
+                    <h3 class="overflow-text">{{ comision.objeto }}</h3>
+                    <p>Objetivo de Comisión</p>
+                  </div>
+    
+                  <div>
+    
+                    <div v-if="comision.urgente">
+                      <span class="color-ind urgente"></span>
+                      <p>Solicitud Urgente</p>
+                    </div>
+    
+                    <div v-else>
+                      <div v-if="comision.extemporanea">
+                        <span class="color-ind extra"></span>
+                        <p>Solicitud Extemporánea</p>
+                      </div>
+                      <div v-else>
+                        <span class="color-ind atiempo"></span>
+                        <p>Solicitud a Tiempo</p>
+                      </div>
+                    </div>
+    
+                  </div>
+    
+                  <div class="cancel-row btt-row state">
+                    <button v-if="virtualSlug == 'rechazadas'" title="rechazado" data-action="rechazado" class="cancel"><i class="icon-close"></i></button>
+                    <button v-if="virtualSlug == 'aprobadas'" title="aprobado"  data-action="aprobado" class="check"><i class="icon-check"></i></button>
+                    <button v-if="virtualSlug == 'pendientes'" title="pendiente"  data-action="aprobado" class="pending"><i class="icon-clock"></i></button>
+                  </div>
+    
+                  <div class="btt-row end-row">
+                     <h3>{{ comision.gerencia }}</h3>
+                  </div>
+
+                  <div class="more-info">
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Nombre</div>
+                        <div class="capitalize">{{ comision.nombres }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Destino</div>
+                        <div>{{ comision.ciudad }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Fecha Inicial</div>
+                        <div>{{ prettyDate(comision.fechaInicial) }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Fecha Final</div>
+                        <div>{{ prettyDate(comision.fechaFinal) }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Días de Comisión</div>
+                        <div>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) + 1 ) }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Departamento</div>
+                        <div>{{ comision.departamento }}</div>
+                      </div>
+
+                      <div class="eco-row">
+                        <div>Gerencia</div>
+                        <div>{{ comision.gerencia }}</div>
+                      </div>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Objetivo Comisión</h3>
+
+                      <p class="objeto-comision">{{ comision.objeto }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Impacto Comisión</h3>
+
+                      <p class="objeto-comision">{{ comision.impactoComision }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <h3>Observaciones</h3>
+
+                      <p class="objeto-comision">{{ comision.observaciones }}</p>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Entidad</div>
+                        <div class="capitalize">{{ comision.entidad }}</div>
+                      </div>
+
+                    </div>
+
+                    <div class="row-group">
+
+                      <div class="eco-row">
+                        <div>Tipo de Comisión</div>
+                        <div class="capitalize">{{ comision.tipoComision }}</div>
+                      </div>
+
+                    </div>
+
+                  </div>
+    
+                </div>
+    
+              </div>
+    
+            </div><!-- /admin-content -->
+
+            <div style="display:none;" id="comisiones-page" class="admin-content virtual-page">
+
+                <a class="back" @click="virtualNav" href="/bienvenido"><i class="icon-arrow"></i> Comisiones {{ virtualSlug.toUpperCase() }}</a>
+      
+                <div class="filters">
+
+                  <div class="select-filter">
+                    <label>Tipo de Solicitud</label>
+                    <select class="filter-tipo-solicitud" @change="filterTipoSolicitud">
+                      <option value="todos">Todos</option>
+                      <option value="urgente">Urgente</option>
+                      <option value="extemporanea">Extemporánea</option>
+                      <option value="atiempo">A Tiempo</option>
+                    </select>
+                  </div>
+      
+                  <div v-if="populatedUser.isDirector" class="select-filter">
+                    <label>Gerencia</label>
+                    <select class="filter-gerencia" @change="filterGerencia">
+                      <option v-for="gerencia in listaGerencias" :value="gerencia.valor.toLowerCase()">{{ gerencia.valor }}</option>
+                    </select>
+      
+                  </div>
+      
+                  <div class="select-filter">
+                    <label>Tipo de viaje</label>
+                    <select class="filter-tipo" @change="filterTipo">
+                      <option value="false" selected="selected">Todos</option>
+                      <option value="nacional">Nacional</option>
+                      <option value="internacional">Internacional</option>
+                    </select>
+                  </div>
+      
+                </div>
+                
+                <div class="comisiones-list">
+      
+                  <div v-for="(comision, index) in comisionesNuevas" :key="'comisionNueva-' + index" :class="[comision.tipoDestino == 'nacional' && 'nacional', comision.urgente && 'urgente', comision.extemporanea && 'extemporanea', !comision.urgente && !comision.extemporanea && 'atiempo']" class="comision list-item">
+      
+                    <div>
+                      <h3 class="capitalize">{{ comision.nombres }}</h3>
+                      <p>Nombre</p>
+                      <i @click="moreInfo" class="icon-eye trigger-more-info"></i>
+                    </div>
+      
+                    <div>
+                      <h3>{{ comision.ciudad }}</h3>
+                      <p>Destino</p>
+                    </div>
+      
+                    <div>
+                      <h3>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) + 1 ) }}</h3>
+                      <p>Días de Comisión</p>
+                    </div>
+      
+                    <div>
+                      <h3 class="overflow-text">{{ comision.objeto }}</h3>
+                      <p>Objetivo de Comisión</p>
+                    </div>
+      
+                    <div>
+      
+                      <div v-if="comision.urgente">
+                        <span class="color-ind urgente"></span>
+                        <p>Solicitud Urgente</p>
+                      </div>
+      
+                      <div v-else>
+                        <div v-if="comision.extemporanea">
+                          <span class="color-ind extra"></span>
+                          <p>Solicitud Extemporánea</p>
+                        </div>
+                        <div v-else>
+                          <span class="color-ind atiempo"></span>
+                          <p>Solicitud a Tiempo</p>
+                        </div>
+                      </div>
+      
+                    </div>
+      
+                    <div class="cancel-row btt-row">
+                      <button title="rechazar" @click="openRechazoPopup" :data-id="comision.id" data-action="rechazado" class="cancel"><i class="icon-close"></i></button>
+                    </div>
+      
+                    <div class="btt-row end-row">
+                      <button title="aprobar" @click="updateComision" :data-id="comision.id" data-action="aprobado" class="check"><i class="icon-check"></i></button>
+                    </div>
+
+                    <div class="more-info">
+
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Nombre</div>
+                          <div class="capitalize">{{ comision.nombres }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Destino</div>
+                          <div>{{ comision.ciudad }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Fecha Inicial</div>
+                          <div>{{ prettyDate(comision.fechaInicial) }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Fecha Final</div>
+                          <div>{{ prettyDate(comision.fechaFinal) }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Días de Comisión</div>
+                          <div>{{ Math.floor( ( comision.fechaFinal - comision.fechaInicial ) / ( 1000 * 60 * 60 * 24 ) + 1 ) }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Departamento</div>
+                          <div>{{ comision.departamento }}</div>
+                        </div>
+  
+                        <div class="eco-row">
+                          <div>Gerencia</div>
+                          <div>{{ comision.gerencia }}</div>
+                        </div>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Objetivo Comisión</h3>
+  
+                        <p class="objeto-comision">{{ comision.objeto }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Impacto Comisión</h3>
+  
+                        <p class="objeto-comision">{{ comision.impactoComision }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <h3>Observaciones</h3>
+  
+                        <p class="objeto-comision">{{ comision.observaciones }}</p>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Entidad</div>
+                          <div class="capitalize">{{ comision.entidad }}</div>
+                        </div>
+  
+                      </div>
+  
+                      <div class="row-group">
+  
+                        <div class="eco-row">
+                          <div>Tipo de Comisión</div>
+                          <div class="capitalize">{{ comision.tipoComision }}</div>
+                        </div>
+  
+                      </div>
+  
+                    </div>
+      
+                  </div>
+      
+                </div>
+      
+             </div><!-- /admin-content -->
+
+             <div style="display:none;" id="tendencias-page" class="admin-content virtual-page">
+        
+                <a class="back" @click="virtualNav" href="/bienvenido"><i class="icon-arrow"></i> Tendencias</a>
+      
+                <div class="filters">
+
+                  <div data-error="fechaInicial" class="form-group fecha-group input-filter">
+                    <label>Fecha inicial</label>
+                    <input data-name="fechaInicial" readonly class="datepicker-input fecha-inicial" placeholder="Selecciona una fecha" type="text" v-model="filtrosTendencia.fechaInicial"  /> 
+                  </div>
+
+                  <div data-error="fechaInicial" class="form-group fecha-group input-filter">
+                    <label>Fecha final</label>
+                    <input data-name="fechaFinal" readonly class="datepicker-input fecha-final" placeholder="Selecciona una fecha" type="text" v-model="filtrosTendencia.fechaFinal"  />  
+                  </div>
+
+                  <div class="select-filter">
+                    <label>Filtrar por gerencia</label>
+                    <select class="filter-gerencia" @change="makeTendencia" v-model="filtrosTendencia.gerencia" >
+                      <option value="todos">Todas</option>
+                      <option v-for="gerencia in listaGerencias" :value="gerencia.valor.toLowerCase()">{{ gerencia.valor }}</option>
+                    </select>
+                  </div>
+
+                  <div class="select-filter">
+                    <label>Filtrar por destino</label>
+                    <select class="filter-destino" @change="makeTendencia" v-model="filtrosTendencia.destino" >
+                      <option value="todos">Todas</option>
+                      <option v-for="destino in listaDestinos" :value="destino">{{ destino }}</option>
+                    </select>
+                  </div>
+
+                  <!-- <div class="input-filter">
+                    <label>Filtrar por nombre</label>
+                    <input @input="filterByName" class="filter-name" type="text" />
+                  </div> -->
+
+                </div>
+
+                <div class="tendencias-wrapper">
+
+                  <div class="tendencia"></div>
+
+                </div>
+              
+              </div>
+
+          </div><!-- /vpages-wrapper -->
+
+        <router-view></router-view>
+
+   </div><!-- /end-col-->
+
+
+</div><!-- /outter-wrapper#bienvenido -->
+
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>
